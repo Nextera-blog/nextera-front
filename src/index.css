@@ -47,6 +47,12 @@
 
   h3 {
     font-size: var(--text-lg);
+    font-weight: bold;
+  }
+
+  h4 {
+    text-align: right;
+    font-size: var(--text-md);
   }
 
   label {
@@ -62,9 +68,14 @@
   }
 
   .card {
-    background-color: var(color-sky-100);
+    background-color: var(--color-sky-100);
+    color: var(--color-sky-950);
     border-radius: 10px;
     padding: 10px;
+  }
+
+  .card-title {
+    color: var(--color-sky-600);
   }
 
   .card:hover {
