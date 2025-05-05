@@ -1,6 +1,15 @@
 @import "tailwindcss";
+@layer theme, base, components, utilities;
 
-#root {
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+* {
+  box-sizing: border-box;
+}
+
+#root{
   width: 100dvw;
   height: 100dvh;
 }
