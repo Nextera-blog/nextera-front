@@ -1,9 +1,4 @@
 @import "tailwindcss";
-@layer theme, base, components, utilities;
-
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/preflight.css" layer(base);
-@import "tailwindcss/utilities.css" layer(utilities);
 
 * {
   box-sizing: border-box;
@@ -12,4 +7,80 @@
 #root{
   width: 100dvw;
   height: 100dvh;
+}
+
+@layer base {
+  button {
+    padding: 5px 15px;
+    border-radius: 7px;
+    background-color: var(--color-sky-600);
+    color: var(--color-sky-50);
+  }
+  
+  button:hover {
+    background-color: var(--color-sky-400);
+  }
+  
+  button:focus {
+    outline: 2px solid var(--color-sky-200);
+  }
+
+  .nav-link:hover {
+    color: var(--color-sky-400);
+  }
+
+  .nav-link:focus {
+    border-bottom: 2px solid var(--color-sky-400);
+    outline: none;
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    text-align: center;
+    font-weight: bold;
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: bold;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: bold;
+  }
+
+  h4 {
+    text-align: right;
+    font-size: var(--text-md);
+  }
+
+  label {
+    font-weight: bold;
+    font-size: var(--text-lg);
+    color: var(--color-sky-500);
+  }
+
+  input {
+    color: var(--color-sky-950);
+    background-color: var(--color-sky-200);
+    font-size: var(--text-md);
+  }
+
+  .card {
+    background-color: var(--color-sky-50);
+    color: var(--color-sky-950);
+    border-radius: 10px;
+    border: 3px solid var(--color-sky-950);
+    padding: 15px;
+  }
+
+  .card-title {
+    color: var(--color-sky-600);
+  }
+
+  .card:hover {
+    border: 3px solid var(--color-sky-500);
+    cursor: pointer;
+  }
 }
