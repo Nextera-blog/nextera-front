@@ -22,7 +22,7 @@ export const ArticleCard = (props: PostCardType) => {
 
   return (
     <Link to={url}>
-      <article className="card h-40" key={articleId}>
+      <article className="card h-40">
         <h2 className="card-title">{title}</h2>
         <p className="p-2 my-2 truncate">{content}</p>
         <h4>{author.name}, {date}</h4>
