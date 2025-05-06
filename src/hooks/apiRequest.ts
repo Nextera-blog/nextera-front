@@ -1,26 +1,14 @@
 import axios from "axios";
-import { useState } from "react";
+import { Article } from "../types/api";
 
-type ApiPostType = {
-  article_id: number;
-  title: string;
-  content: string;
-  author_id: number;
-  creation_date: string;
-  author?: {
-    author_name: string;
-  };
-}
-
-export const apiRequest = (url: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
-  const [posts, setPosts] = useState<ApiPostType[]>([]); // Typage des posts
+export const getPosts = (setLoading: React.Dispatch<React.SetStateAction<boolean>>, setArticles: React.Dispatch<React.SetStateAction<Article[]>>) => {
 
   async function request() {
     await axios
-      .get(`http://localhost:8000/${url}`)
+      .get(`http://localhost:8000/list`)
       .then(res => {
         const data = res.data;
-        setPosts(data);
+        setArticles(data);
         console.log(data);
         setLoading(false);
       })
@@ -31,7 +19,6 @@ export const apiRequest = (url: string, setLoading: React.Dispatch<React.SetStat
   }
 
   request();
-  return posts;
 };
 
  
