@@ -18,13 +18,13 @@ export type PostCardType = {
 export const ArticleCard = (props: PostCardType) => {
   const {articleId, title, content, author, creationDate} = props;
   const date = creationDate.split('T')[0];
-  const url = `/posts/${articleId}`;
+  const url = `/articles/${articleId}`;
 
   return (
     <Link to={url}>
-      <article className="card h-40">
+      <article className="card min-h-40">
         <h2 className="card-title">{title}</h2>
-        <p className="p-2 my-2 truncate">{content}</p>
+        <p className="my-4 truncate">{content}</p>
         <h4>{author.name}, {date}</h4>
       </article>
     </Link>
