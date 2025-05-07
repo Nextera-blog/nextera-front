@@ -10,6 +10,7 @@ export const Header = () => {
       </div>
       <nav className="">
         <NavLink to='/' className="nav-link">Accueil</NavLink>
+        <NavLink to='/redaction-article' className="nav-link">Rédiger un article</NavLink>
       </nav>
       {/* change router direction when connexion page is connect to Router */}
       <button type="button" onClick={() => navigate('/')}>Se connecter</button>

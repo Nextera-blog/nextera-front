@@ -30,7 +30,8 @@
   }
 
   .nav-link {
-    font-size: var(--text-base); 
+    font-size: var(--text-base);
+    margin: 0 15px;
   }
 
   .nav-link:hover {
