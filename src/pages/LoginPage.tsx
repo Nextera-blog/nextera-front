@@ -21,8 +21,8 @@ const LoginPage: React.FC = () => {
 
     try {
       const response: AxiosResponse<LoginResponse> = await axios.post(
-        "http://localhost:8000/token",
-        { username: email, password },
+        "http://localhost:8000/token/",
+        { email: email, password: password },
         { headers: { "Content-Type": "application/json" } }
       );
 
