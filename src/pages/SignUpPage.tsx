@@ -10,6 +10,7 @@ interface SignupResponse {
 const SignUpPage: React.FC = () => {
   const [lastname, setLastname] = useState("");
   const [firstname, setFirstname] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +23,7 @@ const SignUpPage: React.FC = () => {
     try {
       const response: AxiosResponse<SignupResponse> = await axios.post(
         "http://localhost:8000/api/users/register/",
-        { lastname, firstname, email, password },
+        { lastname, firstname, username, email, password },
         { headers: { "Content-Type": "application/json" } }
       );
 
@@ -63,6 +64,16 @@ const SignUpPage: React.FC = () => {
             id="firstname"
             value={firstname}
             onChange={(e) => setFirstname(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="username">Pseudo</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
         </div>
