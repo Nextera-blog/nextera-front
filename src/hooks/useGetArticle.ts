@@ -17,7 +17,7 @@ export const useGetArticle = (articleId: string | undefined): UseGetArticleResul
     const fetchArticle = async () => {
       if (articleId) {
         try {
-          const response = await axios.get(`http://localhost:8000/posts/${articleId}`);
+          const response = await axios.get(`http://localhost:8000/articles/${articleId}`);
           setArticle(response.data);
           setLoading(false);
           setError(null);

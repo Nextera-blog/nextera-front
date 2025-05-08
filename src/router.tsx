@@ -13,7 +13,7 @@ export const router = createBrowserRouter([
           element: <Home />,
          },
          {
-          path: '/posts/:id',
+          path: '/articles/:id',
           element: <ArticlePage />,
          }
          /* {
