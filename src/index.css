@@ -17,7 +17,8 @@
     border-radius: 7px;
     background-color: var(--color-sky-600);
     color: var(--color-sky-50);
-    font-size: var(--text-sm); 
+    font-size: var(--text-sm);
+    width: fit-content;
   }
   
   button:hover {
@@ -32,6 +33,8 @@
   .nav-link {
     font-size: var(--text-base);
     margin: 0 15px;
+    text-wrap: wrap;
+    height: 100%;
   }
 
   .nav-link:hover {
@@ -75,10 +78,13 @@
     color: var(--color-sky-500);
   }
 
-  input {
+  input, textarea {
     color: var(--color-sky-950);
     background-color: var(--color-sky-200);
     font-size: var(--text-md);
+    padding: 5px;
+    border-radius: 5px;
+    margin: 6px 0 16px 0;
   }
 
   .card {
