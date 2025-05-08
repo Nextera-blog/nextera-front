@@ -2,6 +2,7 @@
 
 * {
   box-sizing: border-box;
+  font-family: monospace;
 }
 
 #root{
@@ -14,19 +15,25 @@
     padding: 5px 15px;
     border-radius: 7px;
     background-color: var(--color-sky-600);
-    color: var(--color-sky-50);
+    color: var(--color-sky-50);    
+    font-size: var(--text-sm); 
   }
   
   button:hover {
-    background-color: var(--color-sky-400);
+    background-color: var(--color-sky-400);    
+    cursor: pointer;
   }
   
   button:focus {
     outline: 2px solid var(--color-sky-200);
   }
 
+  .nav-link {
+    font-size: var(--text-base); 
+  }
+
   .nav-link:hover {
-    color: var(--color-sky-400);
+    color: var(--color-sky-300);
   }
 
   .nav-link:focus {
@@ -37,7 +44,8 @@
   h1 {
     font-size: var(--text-2xl);
     text-align: center;
-    font-weight: bold;
+    font-weight: bold;    
+    margin: 16px;
   }
 
   h2 {
@@ -54,7 +62,11 @@
     text-align: right;
     font-size: var(--text-md);
   }
-
+  
+  p {
+    font-size: var(--text-base);
+  }
+  
   label {
     font-weight: bold;
     font-size: var(--text-lg);

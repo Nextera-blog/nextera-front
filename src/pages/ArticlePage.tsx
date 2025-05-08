@@ -26,7 +26,7 @@ export const ArticlePage: React.FunctionComponent = () => {
   }
 
   const creationDate = article.creation_date.split('T')[0];
-
+  
   return (
     <main className="p-4 flex flex-col items-start grow w-full max-w-3xl">
       <h1 className="text-3xl font-bold mb-4">{article.title}</h1>
