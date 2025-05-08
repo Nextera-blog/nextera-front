@@ -17,14 +17,23 @@ const SignUpPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  // Password rules
+  const passwordRequirements = [
+    "Au moins 8 caractères",
+    "Au moins une lettre majuscule",
+    "Au moins une lettre minuscule",
+    "Au moins un chiffre",
+    "Au moins un caractère spécial",
+  ];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
     try {
       const response: AxiosResponse<SignupResponse> = await axiosInstance.post(
-        "/api/users/register/", // relative url prefix in axiosInstance (const baseURL)
-        { lastname, firstname, username, email, password },
+        "/users/register/", // relative url prefix in axiosInstance (const baseURL)
+        { last_name: lastname, first_name: firstname, username, email, password },
         { headers: { "Content-Type": "application/json" } }
       );
 
@@ -46,71 +55,92 @@ const SignUpPage: React.FC = () => {
   return (
     <main className="grow flex flex-col items-center justify-center">
       <h1 className="mb-10">Inscription</h1>
-      {error && <p className="text-red-500 mb-4 bg-red-50 p-2 rounded-md">{error}</p>}
+      {error && (
+        <p className="text-red-500 mb-4 bg-red-50 p-2 rounded-md">{error}</p>
+      )}
       <div className="card w-[90%] md:w-[40%] lg:w-[30%] xl:w-[25%] p-6 rounded-md shadow-md bg-sky-100">
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-        <div className="mb-4">
-          <label className="block mb-2" htmlFor="lastname">Nom</label>
-          <input
-            type="text"
-            id="lastname"
-            className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
-            value={lastname}
-            onChange={(e) => setLastname(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2" htmlFor="firstname">Prénom</label>
-          <input
-            type="text"
-            id="firstname"
-            className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
-            value={firstname}
-            onChange={(e) => setFirstname(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2" htmlFor="username">Pseudo</label>
-          <input
-            type="text"
-            id="username"
-            className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2" htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2" htmlFor="password">Mot de passe</label>
-          <input
-            type="password"
-            id="password"
-            className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex items-center justify-center">
-          <SubmitButton />
-        </div>
-        <div className="text-center text-sm">
-          Déjà un compte ? <a href="/login" className="hover:underline">Se connecter</a>
-        </div>
-      </form>
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+          <div className="mb-4">
+            <label className="block mb-2" htmlFor="lastname">
+              Nom
+            </label>
+            <input
+              type="text"
+              id="lastname"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2" htmlFor="firstname">
+              Prénom
+            </label>
+            <input
+              type="text"
+              id="firstname"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2" htmlFor="username">
+              Pseudo
+            </label>
+            <input
+              type="text"
+              id="username"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2" htmlFor="email">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2" htmlFor="password">
+              Mot de passe
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            {/* Display password rules */}
+            <ul className="text-sm text-gray-600 mt-1">
+              {passwordRequirements.map((rule, index) => (
+                <li key={index}>{rule}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex items-center justify-center">
+            <SubmitButton />
+          </div>
+          <div className="text-center text-sm">
+            Déjà un compte ?{" "}
+            <a href="/login" className="hover:underline">
+              Se connecter
+            </a>
+          </div>
+        </form>
       </div>
     </main>
   );
