@@ -8,7 +8,7 @@ export const Header = () => {
         <NavLink to='/'>Accueil</NavLink>
       </nav>
       {/* change router direction when connexion page is connect to Router */}
-      <button type="button" onClick={() => navigate('/')} className="nextera-button">Se connecter</button>
+      <button type="button" onClick={() => navigate('/login')} className="nextera-button">Se connecter</button>
     </header>
   )
 }

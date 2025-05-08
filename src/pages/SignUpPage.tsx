@@ -1,7 +1,8 @@
 import { useState } from "react";
 import SubmitButton from "../components/SubmitButton";
 import { useNavigate } from "react-router-dom";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
+import axiosInstance from "../api/axiosInstance";
 
 interface SignupResponse {
   message?: string;
@@ -21,8 +22,8 @@ const SignUpPage: React.FC = () => {
     setError(null);
 
     try {
-      const response: AxiosResponse<SignupResponse> = await axios.post(
-        "http://localhost:8000/api/users/register/",
+      const response: AxiosResponse<SignupResponse> = await axiosInstance.post(
+        "/api/users/register/", // relative url prefix in axiosInstance (const baseURL)
         { lastname, firstname, username, email, password },
         { headers: { "Content-Type": "application/json" } }
       );
