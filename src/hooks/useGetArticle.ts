@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Article } from '../types/api';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Article } from "../types/api";
 
 interface UseGetArticleResult {
   article: Article | null;
@@ -8,7 +8,9 @@ interface UseGetArticleResult {
   error: string | null;
 }
 
-export const useGetArticle = (articleId: string | undefined): UseGetArticleResult => {
+export const useGetArticle = (
+  articleId: string | undefined
+): UseGetArticleResult => {
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -17,13 +19,19 @@ export const useGetArticle = (articleId: string | undefined): UseGetArticleResul
     const fetchArticle = async () => {
       if (articleId) {
         try {
-          const response = await axios.get(`http://localhost:8000/articles/${articleId}`);
+          const response = await axios.get(
+            `http://localhost:8000/articles/${articleId}`
+          );
           setArticle(response.data);
           setLoading(false);
           setError(null);
         } catch (error: any) {
           console.error("Error fetching article:", error);
-          setError("Erreur lors de la récupération de l'article.");
+          if (error.response?.status === 404) {
+            setError("Article non trouvé.");
+          } else {
+            setError("Erreur lors de la récupération de l'article.");
+          }
           setLoading(false);
           setArticle(null);
         }
