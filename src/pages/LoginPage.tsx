@@ -89,7 +89,7 @@ const LoginPage: React.FC = () => {
             <SubmitButton />
           </div>
           <div className="text-center text-sm">
-            Pas de compte ? <a href="/signup">S'inscrire</a>
+            Pas de compte ? <a href="/signup" className="hover:underline">S'inscrire</a>
           </div>
         </form>
       </div>

@@ -108,7 +108,7 @@ const SignUpPage: React.FC = () => {
           <SubmitButton />
         </div>
         <div className="text-center text-sm">
-          Déjà un compte ? <a href="/login">Se connecter</a>
+          Déjà un compte ? <a href="/login" className="hover:underline">Se connecter</a>
         </div>
       </form>
       </div>
