@@ -44,7 +44,7 @@ const SignUpPage: React.FC = () => {
     e.preventDefault();
     setError(null);
 
-    if (!hasMinLength) {
+    if (!hasMinLength || !hasUpperCase || !hasLowerCase || !hasDigit || !hasSpecialChar) {
       setError("Le mot de passe ne respecte pas le format requis.");
       return;
     }
