@@ -14,6 +14,7 @@ const SignUpPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -31,6 +32,7 @@ const SignUpPage: React.FC = () => {
   const [hasLowerCase, setHasLowerCase] = useState(false);
   const [hasDigit, setHasDigit] = useState(false);
   const [hasSpecialChar, setHasSpecialChar] = useState(false);
+  const [passwordsMatchError, setPasswordsMatchError] = useState<string | null>(null);
 
   useEffect(() => {
     setHasMinLength(password.length >= 8);
@@ -38,11 +40,22 @@ const SignUpPage: React.FC = () => {
     setHasLowerCase(/[a-z]/.test(password));
     setHasDigit(/\d/.test(password));
     setHasSpecialChar(/[^\w\s]/.test(password));
-  }, [password]);
+    if (confirmPassword && password !== confirmPassword) {
+      setPasswordsMatchError("Les mots de passe ne correspondent pas.");
+    } else {
+      setPasswordsMatchError(null);
+    }
+  }, [password, confirmPassword]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setPasswordsMatchError(null);
+
+    if (password !== confirmPassword) {
+      setPasswordsMatchError("Les mots de passe ne correspondent pas.");
+      return;
+    }
 
     if (!hasMinLength || !hasUpperCase || !hasLowerCase || !hasDigit || !hasSpecialChar) {
       setError("Le mot de passe ne respecte pas le format requis.");
@@ -86,7 +99,7 @@ const SignUpPage: React.FC = () => {
             <input
               type="text"
               id="lastname"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={lastname}
               onChange={(e) => setLastname(e.target.value)}
               required
@@ -99,7 +112,7 @@ const SignUpPage: React.FC = () => {
             <input
               type="text"
               id="firstname"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={firstname}
               onChange={(e) => setFirstname(e.target.value)}
               required
@@ -112,7 +125,7 @@ const SignUpPage: React.FC = () => {
             <input
               type="text"
               id="username"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -125,7 +138,7 @@ const SignUpPage: React.FC = () => {
             <input
               type="email"
               id="email"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -138,7 +151,7 @@ const SignUpPage: React.FC = () => {
             <input
               type="password"
               id="password"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -161,6 +174,22 @@ const SignUpPage: React.FC = () => {
                 {passwordRequirements[4]}
               </li>
             </ul>
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2" htmlFor="confirmPassword">
+              Confirmer le mot de passe
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            {passwordsMatchError && (
+              <p className="text-red-500 text-sm mt-1">{passwordsMatchError}</p>
+            )}
           </div>
           <div className="flex items-center justify-center">
             <SubmitButton />

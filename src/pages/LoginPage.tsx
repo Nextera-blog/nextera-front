@@ -66,7 +66,7 @@ const LoginPage: React.FC = () => {
             <input
               type="email"
               id="email"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -79,7 +79,7 @@ const LoginPage: React.FC = () => {
             <input
               type="password"
               id="password"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
+              className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
