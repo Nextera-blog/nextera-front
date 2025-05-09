@@ -9,7 +9,7 @@ export const Home = () => {
 
   useEffect(() => {
     getArticles(setLoading, setArticles);
-  }, [articles]);
+  }, []);
 
   if (loading) {
     return <main className="p-4 flex flex-col justify-center items-center grow">
