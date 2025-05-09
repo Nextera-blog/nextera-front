@@ -14,4 +14,3 @@ export async function getArticles(setLoading: React.Dispatch<React.SetStateActio
     })
     .finally(() => setLoading(false));
 }
- 
