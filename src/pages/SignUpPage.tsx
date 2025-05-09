@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SubmitButton from "../components/SubmitButton";
 import { useNavigate } from "react-router-dom";
 import axios, { AxiosResponse } from "axios";
@@ -26,9 +26,28 @@ const SignUpPage: React.FC = () => {
     "Au moins un caractère spécial",
   ];
 
+  const [hasMinLength, setHasMinLength] = useState(false);
+  const [hasUpperCase, setHasUpperCase] = useState(false);
+  const [hasLowerCase, setHasLowerCase] = useState(false);
+  const [hasDigit, setHasDigit] = useState(false);
+  const [hasSpecialChar, setHasSpecialChar] = useState(false);
+
+  useEffect(() => {
+    setHasMinLength(password.length >= 8);
+    setHasUpperCase(/[A-Z]/.test(password));
+    setHasLowerCase(/[a-z]/.test(password));
+    setHasDigit(/\d/.test(password));
+    setHasSpecialChar(/[^\w\s]/.test(password));
+  }, [password]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!hasMinLength) {
+      setError("Le mot de passe ne respecte pas le format requis.");
+      return;
+    }
 
     try {
       const response: AxiosResponse<SignupResponse> = await axiosInstance.post(
@@ -124,11 +143,23 @@ const SignUpPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            {/* Display password rules */}
-            <ul className="text-sm text-gray-600 mt-1">
-              {passwordRequirements.map((rule, index) => (
-                <li key={index}>{rule}</li>
-              ))}
+            {/* Display password rules wtih dynamic style */}
+            <ul className="text-sm mt-1">
+              <li className={hasMinLength ? "text-green-500" : "text-red-500"}>
+                {passwordRequirements[0]}
+              </li>
+              <li className={hasUpperCase ? "text-green-500" : "text-red-500"}>
+                {passwordRequirements[1]}
+              </li>
+              <li className={hasLowerCase ? "text-green-500" : "text-red-500"}>
+                {passwordRequirements[2]}
+              </li>
+              <li className={hasDigit ? "text-green-500" : "text-red-500"}>
+                {passwordRequirements[3]}
+              </li>
+              <li className={hasSpecialChar ? "text-green-500" : "text-red-500"}>
+                {passwordRequirements[4]}
+              </li>
             </ul>
           </div>
           <div className="flex items-center justify-center">
