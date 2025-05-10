@@ -4,7 +4,6 @@ export type PostCardType = {
   articleId: number;
   title: string;
   content: string;
-  authorId: number;
   creationDate: string;
   author: {
     author_id: number; 
@@ -25,7 +24,7 @@ export const ArticleCard = (props: PostCardType) => {
       <article className="card min-h-40">
         <h2 className="card-title">{title}</h2>
         <p className="my-4 truncate">{content}</p>
-        <h4>{author.name}, {date}</h4>
+        <h4>{author ? author.name : "Inconnu"}, {date}</h4>
       </article>
     </Link>
   )

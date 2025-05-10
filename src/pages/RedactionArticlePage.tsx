@@ -1,24 +1,36 @@
+import { createArticle } from "../hooks/apiRequest";
+
 export const RedactionArticlePage: React.FunctionComponent = () => {
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // get form data values
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const title = formData.get("title") as string;
+    const content = formData.get("content") as string;
+
+    // console.log(title, content);
+    const response = createArticle(title, content);
+    console.log(response);
+  }
+
   return (
-    <main className="grow flex flex-col items-center h-5/6 overflow-hidden">
+    <main className="grow flex flex-col items-center h-5/6 overflow-hidden pb-6">
       <h1>Rédiger un article</h1>
 
-      <section className="card w-5/6 md:w-1/2 md:mt-2 mb-6 grow p-4 md:p-8 md:max-h-full">
-        <h2 className="text-center mb-6">Nouvel article</h2>
-        <form action="POST" className="flex flex-col h-full">
-          <label htmlFor="title self-start">Titre de l'article</label>
-          <input type="text" name="title" className="md:p-3" />
+      <section className="card w-5/6 grow p-4 h-full md:mt-2 md:w-1/2 flex flex-col">
+        <h2 className="text-center mb-4 md:my-2">Nouvel article</h2>
+
+        <form method="POST" action="" onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleFormSubmit(e)} className="flex flex-col gap-2 grow md:px-10 md:pt-4 md:pb-2">
+          <label htmlFor="title">Titre de l'article</label>
+          <input type="text" name="title" id="title" className="md:p-3" />
 
           <label htmlFor="content">Contenu de l'article</label>
-          <textarea name="content" id="content" className="h-32 md:h-1/3 md:max-h-1/2 overflow-y-scroll"></textarea>
+          <textarea name="content" id="content" className="grow overflow-y-scroll"></textarea>
 
-          <label htmlFor="author_name">Nom de l'auteur</label>
-          <input type="text" className="md:p-3" />
-
-          <label htmlFor="date">Date de création</label>
-          <input type="date" name="creation_date" id="creation_date" defaultValue={`${Date.now}`} className="md:p-3" />
-
-          <button className="self-center md:mb-3">Valider</button>
+          <button type="submit" className="self-center mt-2">Valider</button>
         </form>
       </section>
     </main>

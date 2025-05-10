@@ -7,11 +7,29 @@ import { Article } from "../types/api";
  */
 export async function getArticles(setLoading: React.Dispatch<React.SetStateAction<boolean>>, setArticles: React.Dispatch<React.SetStateAction<Article[]>>) {
   await axios
-    .get('http://localhost:8000/list')
+    .get('http://localhost:8000/articles')
     .then(res => setArticles(res.data))
     .catch(error => {
       console.error("Error fetching data:", error);
     })
     .finally(() => setLoading(false));
+}
+
+export function createArticle(title: string, content: string) {
+  axios
+    .post(
+      'http://localhost:8000/articles/create',
+      { title, content },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`, // ou token stocké ailleurs
+        },
+      }
+    )
+    .then(res => res.data)
+    .catch(error => {
+      error.response?.data?.message || 'Erreur lors de la création.';
+    });
 }
  
