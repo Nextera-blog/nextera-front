@@ -32,11 +32,7 @@ const LoginPage: React.FC = () => {
       console.log("Réponse du serveur (succès) :", response);
 
       if (response.status === 200) {
-        // localStorage.setItem("access_token", response.data.access);
-        // localStorage.setItem("refresh_token", response.data.refresh);
-
         login(response.data.access, response.data.refresh);
-        // authorization header managed by the axios interceptor;
         navigate("/");
         // window.location.reload();
       } else {
@@ -44,16 +40,23 @@ const LoginPage: React.FC = () => {
       }
     } catch (error: unknown) {
       console.error("Erreur lors de la requête de connexion :", error);
-      let errorMessage = "Erreur de connexion au serveur.";
-      if (axios.isAxiosError(error) && error.response) {
-        console.log("Réponse du serveur (erreur) :", error.response);
-        if (error.response.data?.detail) {
-          errorMessage = error.response.data.detail;
-        } else if (error.response.data?.error) {
-          errorMessage = error.response.data.error;
+      // In the case of generic backend responses, with no details (such as "Identifiants incorrects")
+      // if (axios.isAxiosError(error) && error.response?.data.error) {
+      //   setError(error.response.data.error);
+      // } else {
+      //   setError("Erreur de connexion au serveur.");
+      // }
+      //
+      // In the event of an accurate response from the backend, as is currently the case ("Mot de passe invalide.") :
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401 || error.response?.status === 404) {
+          setError("Identifiants incorrects.")
+        } else {
+          setError("Erreur de connexion au serveur.");
         }
+      } else {
+        setError("Erreur de connexion au serveur.");
       }
-      setError(errorMessage);
     }
   };
 

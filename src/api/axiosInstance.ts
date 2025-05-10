@@ -45,7 +45,7 @@ axiosInstance.interceptors.response.use(
           axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${access}`;
 
           return axiosInstance(originalRequest);
-        } else {
+        } else if (originalRequest?.url !== `${baseURL}/token/`) {
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
           window.location.href = '/login';
