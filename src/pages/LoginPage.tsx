@@ -3,6 +3,7 @@ import SubmitButton from "../components/SubmitButton";
 import axios, { AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
+import { useAuth } from "../contexts/AuthContext";
 
 interface LoginResponse {
   access: string;
@@ -15,6 +16,7 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,11 +32,13 @@ const LoginPage: React.FC = () => {
       console.log("Réponse du serveur (succès) :", response);
 
       if (response.status === 200) {
-        localStorage.setItem("access_token", response.data.access);
-        localStorage.setItem("refresh_token", response.data.refresh);
+        // localStorage.setItem("access_token", response.data.access);
+        // localStorage.setItem("refresh_token", response.data.refresh);
+
+        login(response.data.access, response.data.refresh);
         // authorization header managed by the axios interceptor;
         navigate("/");
-        window.location.reload();
+        // window.location.reload();
       } else {
         setError(response.data?.detail || "Identifiants incorrects.");
       }
@@ -89,7 +93,7 @@ const LoginPage: React.FC = () => {
             <SubmitButton />
           </div>
           <div className="text-center text-sm">
-            Pas de compte ? <a href="/signup" className="hover:underline">S'inscrire</a>
+            Pas de compte ? <a href="/signup" className="underline hover:text-sky-600">S'inscrire</a>
           </div>
         </form>
       </div>

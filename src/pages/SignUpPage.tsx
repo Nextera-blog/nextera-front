@@ -90,7 +90,7 @@ const SignUpPage: React.FC = () => {
       {error && (
         <p className="text-red-500 mb-4 bg-red-50 p-2 rounded-md">{error}</p>
       )}
-      <div className="card w-[90%] md:w-[40%] lg:w-[30%] xl:w-[25%] p-6 rounded-md shadow-md bg-sky-100">
+      <div className="card w-[90%] md:w-[40%] lg:w-[30%] xl:w-[25%] p-6 rounded-md shadow-md bg-sky-100 mb-12">
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
           <div className="mb-4">
             <label className="block mb-2" htmlFor="lastname">
@@ -102,6 +102,7 @@ const SignUpPage: React.FC = () => {
               className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={lastname}
               onChange={(e) => setLastname(e.target.value)}
+              placeholder="Champ obligatoire"
               required
             />
           </div>
@@ -115,6 +116,7 @@ const SignUpPage: React.FC = () => {
               className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={firstname}
               onChange={(e) => setFirstname(e.target.value)}
+              placeholder="Champ obligatoire"
               required
             />
           </div>
@@ -128,6 +130,7 @@ const SignUpPage: React.FC = () => {
               className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              placeholder="Champ obligatoire"
               required
             />
           </div>
@@ -141,6 +144,7 @@ const SignUpPage: React.FC = () => {
               className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="Champ obligatoire"
               required
             />
           </div>
@@ -154,6 +158,7 @@ const SignUpPage: React.FC = () => {
               className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="Champ obligatoire"
               required
             />
             {/* Display password rules wtih dynamic style */}
@@ -185,6 +190,7 @@ const SignUpPage: React.FC = () => {
               className="w-full px-4 py-2 rounded-md border border-blue-300 focus:outline-none focus:ring-2 focus:ring-sky-200 text-sky-900"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Champ obligatoire"
               required
             />
             {passwordsMatchError && (
@@ -196,7 +202,7 @@ const SignUpPage: React.FC = () => {
           </div>
           <div className="text-center text-sm">
             Déjà un compte ?{" "}
-            <a href="/login" className="hover:underline">
+            <a href="/login" className="underline hover:text-sky-600">
               Se connecter
             </a>
           </div>
