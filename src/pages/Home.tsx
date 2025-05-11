@@ -19,13 +19,13 @@ export const Home = () => {
   }
 
   return (
-    <main className="p-4 flex flex-col items-center grow">
+    <main className="p-4 flex flex-col items-center grow h-5/6 overflow-hidden">
       <h1 className="mb-10">Bienvenue sur Nextera Blog !</h1>
 
       {!loading && articles.length > 0 ? 
-        <section className="w-7xl grid grid-cols-2 gap-y-5 gap-x-10">
+        <section className="w-full grid grid-cols-1 gap-y-5 overflow-y-auto md:max-h-full  md:w-7xl md:grid-cols-2 md:gap-x-10">
           {articles.map((article) => {
-            return <ArticleCard articleId={article.article_id} title={article.title} content={article.content} authorId={article.author_id} creationDate={article.creation_date} author={article.author} key={article.article_id} />
+            return <ArticleCard articleId={article.article_id} title={article.title} content={article.content} creationDate={article.creation_date} author={article.author} key={article.article_id} />
           })}
         </section>
         : <p className="text-center">Aucun post pour le moment</p>
