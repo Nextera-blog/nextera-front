@@ -4,6 +4,7 @@ export type Author = {
   join_date: string;
   name: string;
   profile_picture_url: string;
+  username: string;
 }
 
 export type Article = {
