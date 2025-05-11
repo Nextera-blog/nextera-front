@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useGetArticle } from '../hooks/useGetArticle';
+import useApi from '../hooks/useApi';
+import { Article } from '../types/api';
 
 export const ArticlePage: React.FunctionComponent = () => {
   const { id } = useParams();
-  const { article, loading, error } = useGetArticle(id);
+  const { data: article, loading, error, fetchData: fetchArticle } = useApi<Article>(`/articles/${id}`);
+
+  useEffect(() => {
+    if (id) {
+      fetchArticle();
+    }
+  }, [fetchArticle, id]);
 
   if (loading) {
     return <main className="p-4 flex flex-col justify-center items-center grow">
@@ -19,7 +26,6 @@ export const ArticlePage: React.FunctionComponent = () => {
     </main>;
   }
 
-  // Case where the article is null after loading (either the API returned a success with no data, or an unhandled error led to this state).
   if (!article) {
     return <main className="p-4 flex justify-center items-center grow">
       <p className="text-red-500 mb-4 bg-red-50 p-2 rounded-md">Article non trouvé.</p>
