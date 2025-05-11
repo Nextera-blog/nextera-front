@@ -52,7 +52,7 @@ const LoginPage: React.FC = () => {
     <main className="grow flex flex-col items-center justify-center">
       <h1 className="mb-10">Connexion</h1>
       {error && <p className="text-red-500 mb-4 bg-red-50 p-2 rounded-md">{error}</p>}
-      <div className="card w-[90%] md:w-[40%] lg:w-[30%] xl:w-[25%] p-6 rounded-md shadow-md bg-sky-100">
+      <div className="card w-[90%] md:w-[40%] lg:w-[30%] xl:w-[25%] px-6 py-10 shadow-md bg-sky-100">
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
           <div className="mb-4">
             <label className="block mb-2" htmlFor="email">

@@ -9,7 +9,7 @@ export type PostCardType = {
     author_id: number; 
     bio: string;
     join_date: string;
-    name: string;
+    username: string;
     profile_picture_url: string;
   }
 }
@@ -24,7 +24,7 @@ export const ArticleCard = (props: PostCardType) => {
       <article className="card min-h-40">
         <h2 className="card-title">{title}</h2>
         <p className="my-4 truncate">{content}</p>
-        <h4>{author ? author.name : "Inconnu"}, {date}</h4>
+        <h4>{author ? author.username : "Inconnu"}, {date}</h4>
       </article>
     </Link>
   )

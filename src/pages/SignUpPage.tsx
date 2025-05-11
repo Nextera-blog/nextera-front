@@ -88,7 +88,7 @@ const SignUpPage: React.FC = () => {
       {error && (
         <p className="text-red-500 mb-4 bg-red-50 p-2 rounded-md">{error}</p>
       )}
-      <div className="card w-[90%] md:w-[40%] lg:w-[30%] xl:w-[25%] p-6 rounded-md shadow-md bg-sky-100 mb-12">
+      <div className="card w-[90%] md:w-[50%] lg:w-[40%] xl:w-[30%] p-6 shadow-md bg-sky-100 mb-12">
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
           <div className="mb-4">
             <label className="block mb-2" htmlFor="lastname">

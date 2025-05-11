@@ -1,11 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createArticle } from "../hooks/apiRequest";
 import { NotificationCard } from "../components/NotificationCard";
+import { useNavigate } from "react-router-dom";
 
 export const RedactionArticlePage: React.FunctionComponent = () => {
+  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
+  
+  useEffect(() => {
+    if (!localStorage.getItem("access_token")) {
+      navigate('/');
+    }
+  },[])
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,7 +28,12 @@ export const RedactionArticlePage: React.FunctionComponent = () => {
 
     setOpenModal(true);
     setTimeout(() => 
-      setOpenModal(false), 3000
+      {
+        setOpenModal(false);
+        if (!error) {
+          navigate('/');
+        }
+      }, 3000
     );
   }
 
