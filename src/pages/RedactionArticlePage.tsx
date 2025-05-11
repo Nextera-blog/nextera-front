@@ -1,6 +1,11 @@
+import { useState } from "react";
 import { createArticle } from "../hooks/apiRequest";
+import { NotificationCard } from "../components/NotificationCard";
 
 export const RedactionArticlePage: React.FunctionComponent = () => {
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<boolean>(false);
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -11,14 +16,18 @@ export const RedactionArticlePage: React.FunctionComponent = () => {
     const title = formData.get("title") as string;
     const content = formData.get("content") as string;
 
-    // console.log(title, content);
-    const response = createArticle(title, content);
-    console.log(response);
+    createArticle(title, content, setMessage, setError);
+
+    setOpenModal(true);
+    setTimeout(() => 
+      setOpenModal(false), 3000
+    );
   }
 
   return (
-    <main className="grow flex flex-col items-center h-5/6 overflow-hidden pb-6">
+    <main className="grow flex flex-col items-center h-5/6 overflow-hidden pb-6 relative">
       <h1>Rédiger un article</h1>
+      {openModal && <NotificationCard message={message} error={error} openModal={openModal} />}
 
       <section className="card w-5/6 grow p-4 h-full md:mt-2 md:w-1/2 flex flex-col">
         <h2 className="text-center mb-4 md:my-2">Nouvel article</h2>
