@@ -48,7 +48,6 @@ axiosInstance.interceptors.response.use(
         } else if (originalRequest?.url !== `${baseURL}/token/`) {
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
-          window.location.href = '/login';
         }
       } catch (refreshError) {
         console.error('Token refresh failed:', refreshError);
