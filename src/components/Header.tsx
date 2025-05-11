@@ -1,7 +1,19 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom"
+import { useAuth } from "../contexts/AuthContext";
 
 export const Header = () => {
   const navigate = useNavigate();
+  const { isLoggedIn, logout } = useAuth();
+
+  const handleAuthButtonClick = () => {
+    if (isLoggedIn) {
+      logout();
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <header className="w-full flex border-b-1 border-sky-500 py-2  px-2 mb-2 flex justify-between items-center">
       <div className="flex items-center">
@@ -11,8 +23,9 @@ export const Header = () => {
       <nav className="">
         <NavLink to='/' className="nav-link">Accueil</NavLink>
       </nav>
-      {/* change router direction when connexion page is connect to Router */}
-      <button type="button" onClick={() => navigate('/')}>Se connecter</button>
+      <button type="button" onClick={handleAuthButtonClick} className="nextera-button">
+        {isLoggedIn ? 'Se déconnecter' : 'Se connecter'}
+      </button>
     </header>
   )
 }
