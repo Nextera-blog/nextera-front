@@ -23,7 +23,7 @@ export function createArticle(title: string, content: string) {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`, // ou token stocké ailleurs
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         },
       }
     )
