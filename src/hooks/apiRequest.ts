@@ -18,7 +18,7 @@ export async function getArticles(setLoading: React.Dispatch<React.SetStateActio
 export function createArticle(title: string, content: string) {
   axios
     .post(
-      'http://localhost:8000/articles/create',
+      'http://localhost:8000/articles/create/',
       { title, content },
       {
         headers: {
