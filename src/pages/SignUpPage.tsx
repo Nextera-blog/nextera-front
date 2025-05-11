@@ -70,13 +70,11 @@ const SignUpPage: React.FC = () => {
       );
 
       if (response.status === 201) {
-        console.log("Inscription réussie !", response.data);
         navigate("/login");
       } else {
         setError(response.data?.message || "Erreur lors de l'inscription.");
       }
     } catch (error: unknown) {
-      console.error("Erreur lors de la requête d'inscription :", error);
       setError("Erreur de connexion au serveur.");
       if (axios.isAxiosError(error) && error.response?.data?.message) {
         setError(error.response.data.message);

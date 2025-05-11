@@ -29,25 +29,13 @@ const LoginPage: React.FC = () => {
         { headers: { "Content-Type": "application/json" } }
       );
 
-      console.log("Réponse du serveur (succès) :", response);
-
       if (response.status === 200) {
         login(response.data.access, response.data.refresh);
         navigate("/");
-        // window.location.reload();
       } else {
         setError(response.data?.detail || "Identifiants incorrects.");
       }
     } catch (error: unknown) {
-      console.error("Erreur lors de la requête de connexion :", error);
-      // In the case of generic backend responses, with no details (such as "Identifiants incorrects")
-      // if (axios.isAxiosError(error) && error.response?.data.error) {
-      //   setError(error.response.data.error);
-      // } else {
-      //   setError("Erreur de connexion au serveur.");
-      // }
-      //
-      // In the event of an accurate response from the backend, as is currently the case ("Mot de passe invalide.") :
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401 || error.response?.status === 404) {
           setError("Identifiants incorrects.")
