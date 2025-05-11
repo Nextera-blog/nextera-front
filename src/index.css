@@ -2,6 +2,7 @@
 
 * {
   box-sizing: border-box;
+  font-family: monospace;
 }
 
 #root{
@@ -15,18 +16,24 @@
     border-radius: 7px;
     background-color: var(--color-sky-600);
     color: var(--color-sky-50);
+    font-size: var(--text-sm); 
   }
   
   button:hover {
     background-color: var(--color-sky-400);
+    cursor: pointer;
   }
   
   button:focus {
     outline: 2px solid var(--color-sky-200);
   }
 
+  .nav-link {
+    font-size: var(--text-base); 
+  }
+
   .nav-link:hover {
-    color: var(--color-sky-400);
+    color: var(--color-sky-300);
   }
 
   .nav-link:focus {
@@ -35,9 +42,10 @@
   }
 
   h1 {
-    font-size: var(--text-2xl);
+    font-size: var(--text-3xl);
     text-align: center;
     font-weight: bold;
+    margin: 16px;
   }
 
   h2 {
@@ -54,6 +62,10 @@
     text-align: right;
     font-size: var(--text-md);
   }
+  
+  p {
+    font-size: var(--text-base);
+  }
 
   label {
     font-weight: bold;
@@ -64,15 +76,15 @@
   input {
     color: var(--color-sky-950);
     background-color: var(--color-sky-200);
-    /* border-color: var(--color-red-500); */
     font-size: var(--text-md);
   }
 
   .card {
-    background-color: var(--color-sky-100);
+    background-color: var(--color-sky-50);
     color: var(--color-sky-950);
     border-radius: 10px;
-    padding: 10px;
+    border: 3px solid var(--color-sky-950);
+    padding: 15px;
   }
 
   .card-title {
@@ -82,5 +94,6 @@
   .card:hover {
     outline-width: 2px;
     outline-color: var(--color-sky-500);
+    cursor: pointer;
   }
 }
