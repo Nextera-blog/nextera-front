@@ -11,6 +11,7 @@ export type PostCardType = {
     join_date: string;
     username: string;
     profile_picture_url: string;
+    username: string; // added
   }
 }
 
@@ -24,6 +25,7 @@ export const ArticleCard = (props: PostCardType) => {
       <article className="card min-h-40">
         <h2 className="card-title">{title}</h2>
         <p className="my-4 truncate">{content}</p>
+        {/* author.usename instead of author.name */}
         <h4>{author ? author.username : "Inconnu"}, {date}</h4>
       </article>
     </Link>
