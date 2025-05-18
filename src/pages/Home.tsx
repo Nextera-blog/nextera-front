@@ -39,11 +39,11 @@ export const Home = () => {
   console.log(articles);
 
   return (
-    <main className="p-4 flex flex-col items-center grow">
+    <main className="p-4 flex flex-col items-center grow h-5/6 overflow-hidden">
       <h1 className="mb-10">Bienvenue sur Nextera Blog !</h1>
 
       {!loading && articles && articles.length > 0 ? (
-        <section className="w-7xl grid grid-cols-2 gap-y-5 gap-x-10">
+        <section className="w-full grid grid-cols-1 gap-y-5 overflow-y-auto-sxroll md:max-h-full  md:w-7xl md:grid-cols-2 md:gap-x-10">
           {articles.map((article) => {
             return (
               <ArticleCard

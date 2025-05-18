@@ -37,12 +37,12 @@ export const ArticlePage: React.FunctionComponent = () => {
   console.log(article);
   
   return (
-    <main className="card grow m-10">
-      <h1>{article.title}</h1>
-      <p className="mb-8">Publié le {creationDate} par {article.author.username}</p>
-      <div className="whitespace-pre-wrap"> {/* Preserve spaces and line breaks (\n) */}
-        <p>{article.content}</p>
-      </div>
+    <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
+      <section className='card grow w-1/2 m-6 overflow-y-auto-scroll flex flex-col'>
+        <h1 className='card-title'>{article.title}</h1>
+        <p className="whitespace-pre-wrap py-4 mx-8 my-4 border-y-2 border-sky-600 grow">{article.content}</p>
+        <p className="my-4 mr-8 text-end">Publié le {creationDate} par {article.author.username}</p>
+      </section>
     </main>
   );
 };
