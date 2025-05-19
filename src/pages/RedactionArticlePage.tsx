@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createArticle } from "../hooks/apiRequest";
+// import { createArticle } from "../hooks/apiRequest";
 import { NotificationCard } from "../components/NotificationCard";
 import { useNavigate } from "react-router-dom";
 
@@ -24,7 +24,7 @@ export const RedactionArticlePage: React.FunctionComponent = () => {
     const title = formData.get("title") as string;
     const content = formData.get("content") as string;
 
-    createArticle(title, content, setMessage, setError);
+    // createArticle(title, content, setMessage, setError);
 
     setOpenModal(true);
     setTimeout(() => 

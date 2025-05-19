@@ -11,7 +11,7 @@ export type PostCardType = {
     join_date: string;
     username: string;
     profile_picture_url: string;
-    username: string; // added
+    // username: string; // added
   }
 }
 
