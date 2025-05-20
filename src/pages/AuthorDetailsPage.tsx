@@ -60,10 +60,13 @@ export const AuthorDetailsPage: React.FunctionComponent = () => {
     console.log('Fake sauvegarde bio (appel api à implémenter avec le back', bioText);
     setIsUpdating(false);
   }
+
+  console.log(author.articles.length);
   
   return (
     <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
       <section className='card grow w-1/2 m-6 overflow-y-auto-scroll flex flex-col'>
+        <p className="text-xl text-center mt-4">Qui est...</p>
         <h1 className='card-title'>{author.name}</h1>
         <div className="py-4 mx-8 my-4 border-y-2 border-sky-600 grow">
           {isUpdating ? (
@@ -87,7 +90,7 @@ export const AuthorDetailsPage: React.FunctionComponent = () => {
       </div>
       </section>
       <section className='card grow w-1/2 m-6 overflow-y-auto-scroll flex flex-col'>
-        <h2 className="card-title text-2xl text-center m-4">Articles</h2>
+        <h2 className="card-title text-2xl text-center m-4">{(author.articles.length > 1) ? 'Ses articles' : 'Son article'}</h2>
         <ul className="whitespace-pre-wrap py-2 mx-8 border-y-2 border-sky-600 grow">
             {author.articles && author.articles.map((article) => (
                 <li className="py-2" key={article.article_id}><Link to={`/articles/${article.article_id}`}>{article.title}</Link></li>
