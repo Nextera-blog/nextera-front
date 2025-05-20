@@ -36,7 +36,7 @@ export const Home = () => {
     );
   }
 
-  console.log(articles);
+  console.log("Article dans Home : ", articles);
 
   return (
     <main className="p-4 flex flex-col items-center grow h-5/6 overflow-hidden">
@@ -50,7 +50,6 @@ export const Home = () => {
                 articleId={article.article_id}
                 title={article.title}
                 content={article.content}
-                authorId={article.author_id}
                 creationDate={article.creation_date}
                 author={article.author}
                 key={article.article_id}

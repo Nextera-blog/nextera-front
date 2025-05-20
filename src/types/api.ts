@@ -1,9 +1,11 @@
 export type Author = {
-  author_id: number; 
+  // To be checked with the backend. BaseAuthorsSerializer is used to serialize the author in the article list and details. However, the 'Authors' model has a user field. The primary key of the authors table is in fact a user foreign key to Django's User model; the identifier we see in article.author.user is the id of the django user associated with this author
+  author_id?: number; 
+  user: number;
   bio: string;
   join_date: string;
-  name: string;
-  profile_picture_url: string;
+  name?: string;
+  profile_picture_url: string | null;
   username: string;
 }
 

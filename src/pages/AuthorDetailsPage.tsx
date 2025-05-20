@@ -5,17 +5,18 @@ import { AuthorDetails } from '../types/api';
 import { useAuth } from '../contexts/AuthContext';
 
 export const AuthorDetailsPage: React.FunctionComponent = () => {
-  const { id } = useParams();
-  const { data: author, loading, error, fetchData: fetchAuthor } = useApi<AuthorDetails>(`/authors/${id}`);
-  const { userId } = useAuth();
+  // Renaming in destructuration to make code clearer and easier to debug
+  const { id: authorIdFromRoute } = useParams();
+  const { data: author, loading, error, fetchData: fetchAuthor } = useApi<AuthorDetails>(`/authors/${authorIdFromRoute}`);
+  const { userId: LoggedInUserId } = useAuth();
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [bioText, setBioText] = useState<string>('');
 
   useEffect(() => {
-    if (id) {
+    if (authorIdFromRoute) {
       fetchAuthor();
     }
-  }, [fetchAuthor, id]);
+  }, [fetchAuthor, authorIdFromRoute]);
 
   useEffect(() => {
     if (author) {
@@ -44,7 +45,7 @@ export const AuthorDetailsPage: React.FunctionComponent = () => {
 
   // console.log(author);
 
-  const isCurrentUserAuthor = userId !== null && author.user === userId;
+  const isCurrentUserAuthor = LoggedInUserId !== null && author.user === LoggedInUserId;
 
   const handleUpdateClick = () => {
     setIsUpdating(true);
@@ -72,7 +73,7 @@ export const AuthorDetailsPage: React.FunctionComponent = () => {
               onChange={handleBioChange}
             />
           ) : (
-          <p className="whitespace-pre-wrap py-4 mx-8 my-4 border-y-2 border-sky-600 grow">{author.bio}</p>
+          <p className="whitespace-pre-wrap py-4 grow">{author.bio}</p>
         )}
         {isCurrentUserAuthor && !isUpdating && (
           <button onClick={handleUpdateClick} className="nextera-button mt-2">Modifier la bio</button>

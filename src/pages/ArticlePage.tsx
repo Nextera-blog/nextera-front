@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useApi from '../hooks/useApi';
 import { Article } from '../types/api';
 
@@ -34,14 +34,16 @@ export const ArticlePage: React.FunctionComponent = () => {
 
   const creationDate = article.creation_date.split('T')[0];
 
-  console.log(article);
+  console.log("Article : ", article);
+  console.log("Article avant rendu :", article);
+  console.log("Article.author avant rendu :", article?.author);
   
   return (
     <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
       <section className='card grow w-1/2 m-6 overflow-y-auto-scroll flex flex-col'>
         <h1 className='card-title'>{article.title}</h1>
-        <p className="whitespace-pre-wrap py-4 mx-8 my-4 border-y-2 border-sky-600 grow">{article.content}</p>
-        <p className="my-4 mr-8 text-end">Publié le {creationDate} par {article.author.username}</p>
+        <p className="whitespace-pre-wrap py-8 mx-8 my-4 border-y-2 border-sky-600 grow">{article.content}</p>
+        <p className="my-4 mr-8 text-end">Publié le {creationDate} par <Link to={`/authors/${article.author.user}`}>{article.author.name}</Link></p>
       </section>
     </main>
   );
