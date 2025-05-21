@@ -6,12 +6,13 @@ export type PostCardType = {
   content: string;
   creationDate: string;
   author: {
-    author_id: number; 
+    // author_id: number;
+    user: number; // See if we choose 'user' or 'author_id' 
     bio: string;
     join_date: string;
-    username: string;
-    profile_picture_url: string;
-    username: string; // added
+    // username: string;
+    profile_picture_url: string | null;
+    name?: string;
   }
 }
 
@@ -26,7 +27,7 @@ export const ArticleCard = (props: PostCardType) => {
         <h2 className="card-title">{title}</h2>
         <p className="my-4 truncate">{content}</p>
         {/* author.usename instead of author.name */}
-        <h4>{author ? author.username : "Inconnu"}, {date}</h4>
+        <h4>{author ? author.name : "Inconnu"}, {date}</h4>
       </article>
     </Link>
   )

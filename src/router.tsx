@@ -3,15 +3,16 @@ import { App } from "./pages/App";
 import { Home } from "./pages/Home";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
-import { ArticlePage } from "./pages/ArticlePage"
+import { ArticlePage } from "./pages/ArticlePage";
 import { RedactionArticlePage } from "./pages/RedactionArticlePage";
 import { ErrorPage } from "./pages/ErrorPage";
+import { AuthorDetailsPage } from "./pages/AuthorDetailsPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-      errorElement: <ErrorPage />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
@@ -26,12 +27,16 @@ export const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: '/articles/:id',
+        path: "/articles/:id",
         element: <ArticlePage />,
-         },
-         {
-          path: '/redaction-article',
-          element: <RedactionArticlePage />,
+      },
+      {
+        path: "/redaction-article",
+        element: <RedactionArticlePage />,
+      },
+      {
+        path: "/authors/:id",
+        element: <AuthorDetailsPage />,
       },
     ],
   },

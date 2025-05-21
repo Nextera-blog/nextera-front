@@ -1,48 +1,37 @@
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import useApi from '../hooks/useApi';
+import { Link, useParams } from 'react-router-dom';
 import { Article } from '../types/api';
+import { getArticleById } from '../services/articles';
+import useFetch from '../hooks/useFetch';
+import DataFetchingState from '../components/DataFetchingState';
 
 export const ArticlePage: React.FunctionComponent = () => {
   const { id } = useParams();
-  const { data: article, loading, error, fetchData: fetchArticle } = useApi<Article>(`/articles/${id}`);
+  const { loading, error, data: article } = useFetch<Article>(getArticleById, id);
 
-  useEffect(() => {
-    if (id) {
-      fetchArticle();
-    }
-  }, [fetchArticle, id]);
-
-  if (loading) {
-    return <main className="p-4 flex flex-col justify-center items-center grow">
-      <p className="mb-2">Chargement de l'article</p>
-      <img src="/loader.gif" className="w-3xs h-8" alt="Chargement en cours..." />
-    </main>;
+  if (article) {
+    // const creationDate = article.creation_date.split('T')[0];
+    console.log("Article : ", article);
+    console.log("Article avant rendu :", article);
+    console.log("Article.author avant rendu :", article?.author);
   }
 
-  if (error) {
-    return <main className="p-4 flex justify-center items-center grow">
-      <p className="text-red-500 mb-4 bg-red-50 p-2 rounded-md">{error}</p>
-    </main>;
-  }
-
-  if (!article) {
-    return <main className="p-4 flex justify-center items-center grow">
-      <p className="text-red-500 mb-4 bg-red-50 p-2 rounded-md">Article non trouvé.</p>
-    </main>;
-  }
-
-  const creationDate = article.creation_date.split('T')[0];
-
-  console.log(article);
-  
   return (
-    <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
-      <section className='card grow w-1/2 m-6 overflow-y-auto-scroll flex flex-col'>
-        <h1 className='card-title'>{article.title}</h1>
-        <p className="whitespace-pre-wrap py-4 mx-8 my-4 border-y-2 border-sky-600 grow">{article.content}</p>
-        <p className="my-4 mr-8 text-end">Publié le {creationDate} par {article.author.username}</p>
-      </section>
-    </main>
+    <DataFetchingState loading={loading} error={error}>
+      <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
+        {article ? (
+          <section className='card grow w-1/2 m-6 overflow-y-auto-scroll flex flex-col'>
+            <h1 className='card-title'>{article.title}</h1>
+            <p className="whitespace-pre-wrap py-8 mx-8 my-4 border-y-2 border-sky-600 grow">{article.content}</p>
+            <p className="my-4 mr-8 text-end">Publié le {article.creation_date.split('T')[0]} par <Link to={`/authors/${article.author.user}`}>{article.author.name}</Link></p>
+          </section>
+        ) : (
+          !loading && !error && (
+            <main className="p-4 flex justify-center items-center grow">
+              <p className="text-red-500 mb-4 bg-red-50 p-2 rounded-md">Article non trouvé.</p>
+            </main>
+          )
+        )}
+      </main>
+    </DataFetchingState>
   );
 };
