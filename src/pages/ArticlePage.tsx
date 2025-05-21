@@ -1,17 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import useApi from '../hooks/useApi';
+// import useApi from '../hooks/useApi';
 import { Article } from '../types/api';
+import { getArticleById } from '../services/articles';
 
 export const ArticlePage: React.FunctionComponent = () => {
   const { id } = useParams();
-  const { data: article, loading, error, fetchData: fetchArticle } = useApi<Article>(`/articles/${id}`);
+  const [article, setArticle] = useState<Article | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  // const { data: article, loading, error, fetchData: fetchArticle } = useApi<Article>(`/articles/${id}`);
+
+  // useEffect(() => {
+  //   if (id) {
+  //     fetchArticle();
+  //   }
+  // }, [fetchArticle, id]);
 
   useEffect(() => {
-    if (id) {
-      fetchArticle();
-    }
-  }, [fetchArticle, id]);
+    const fetchArticleData = async () => {
+      if (id) {
+        setLoading(true);
+        setError(null);
+        try {
+          const data = await getArticleById(id);
+          setArticle(data);
+        } catch (err: any) {
+          console.error(`Erreur lors de la récupération de l'article ${id} : `, err);
+          setError(err.message || 'Une erreur est survenue lors de la récupération de l\'article.');
+          setArticle(null);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchArticleData();
+  }, [id]);
 
   if (loading) {
     return <main className="p-4 flex flex-col justify-center items-center grow">

@@ -2,21 +2,28 @@ import { useEffect, useState } from "react";
 // import { createArticle } from "../hooks/apiRequest";
 import { NotificationCard } from "../components/NotificationCard";
 import { useNavigate } from "react-router-dom";
+import { createArticle } from "../services/articles";
+import { useAuth } from "../contexts/AuthContext";
 
 export const RedactionArticlePage: React.FunctionComponent = () => {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const { userId } = useAuth();
   
   useEffect(() => {
     if (!localStorage.getItem("access_token")) {
       navigate('/');
     }
-  },[])
+  }, [navigate])
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setMessage(null);
+    setError(false);
 
     // get form data values
     const form = e.currentTarget;
@@ -26,15 +33,39 @@ export const RedactionArticlePage: React.FunctionComponent = () => {
 
     // createArticle(title, content, setMessage, setError);
 
-    setOpenModal(true);
-    setTimeout(() => 
-      {
-        setOpenModal(false);
-        if (!error) {
+    // setOpenModal(true);
+    // setTimeout(() => 
+    //   {
+    //     setOpenModal(false);
+    //     if (!error) {
+    //       navigate('/');
+    //     }
+    //   }, 3000
+    // );
+
+    try {
+      if (userId) {
+        await createArticle(title, content, userId);
+        setMessage("Article créé avec succès !");
+        setError(false);
+        setOpenModal(true);
+        setTimeout(() => {
+          setOpenModal(false);
           navigate('/');
-        }
-      }, 3000
-    );
+        }, 3000);
+      } else {
+        setMessage("Vous devez être connecté pour créer un article.");
+        setError(true);
+        setOpenModal(true);
+      }
+    } catch (err: any) {
+      console.error("Erreur lors de la création de l'article : ", err);
+      setMessage(err.response?.data?.message || err.message || "Erreur lors de la création de l'article.");
+      setError(true);
+      setOpenModal(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -45,14 +76,22 @@ export const RedactionArticlePage: React.FunctionComponent = () => {
       <section className="card w-5/6 grow p-4 h-full md:mt-2 md:w-1/2 flex flex-col">
         <h2 className="text-center mb-4 md:my-2">Nouvel article</h2>
 
-        <form method="POST" action="" onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleFormSubmit(e)} className="flex flex-col gap-2 grow md:px-10 md:pt-4 md:pb-2">
+        {/* <form method="POST" action="" onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleFormSubmit(e)} className="flex flex-col gap-2 grow md:px-10 md:pt-4 md:pb-2">
           <label htmlFor="title">Titre de l'article</label>
-          <input type="text" name="title" id="title" className="md:p-3" />
+          <input type="text" name="title" id="title" className="md:p-3" /> */}
+
+        <form method="POST" action="" onSubmit={handleFormSubmit} className="flex flex-col gap-2 grow md:px-10 md:pt-4 md:pb-2">
+          <label htmlFor="title">Titre de l'article</label>
+          <input type="text" name="title" id="title" className="md:p-3" required />
 
           <label htmlFor="content">Contenu de l'article</label>
           <textarea name="content" id="content" className="grow overflow-y-scroll"></textarea>
 
-          <button type="submit" className="self-center mt-2">Valider</button>
+          {/* <button type="submit" className="self-center mt-2">Valider</button> */}
+
+          <button type="submit" className="self-center mt-2" disabled={isSubmitting}>
+            {isSubmitting ? 'Création en cours...' : 'Valider'}
+          </button>
         </form>
       </section>
     </main>

@@ -1,19 +1,43 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArticleCard } from "../components/ArticleCard";
 import { Article } from "../types/api";
-import useApi from "../hooks/useApi";
+// import useApi from "../hooks/useApi";
+import { getArticles } from "../services/articles";
 
 export const Home = () => {
-  const {
-    data: articles,
-    loading,
-    error,
-    fetchData: fetchArticles,
-  } = useApi<Article[]>("/articles");
+  // const {
+  //   data: articles,
+  //   loading,
+  //   error,
+  //   fetchData: fetchArticles,
+  // } = useApi<Article[]>("/articles");
+
+  const [articles, setArticles] = useState<Article[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // useEffect(() => {
+  //   fetchArticles();
+  // }, [fetchArticles]);
 
   useEffect(() => {
-    fetchArticles();
-  }, [fetchArticles]);
+    const fetchArticlesData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getArticles();
+        setArticles(data);
+      } catch (err: any) {
+        console.error("Erreur lors de la récupération des articles : ", err);
+        setError(err.message || 'Une erreur est survenue lors de la récupération des articles.');
+        setArticles(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticlesData();
+  }, []);
 
   if (loading) {
     return (
