@@ -3,6 +3,7 @@ import { Article } from "../types/api";
 import { getArticleById } from "../services/articles";
 import useFetch from "../hooks/useFetch";
 import DataFetchingState from "../components/DataFetchingState";
+import CommentCard from "../components/CommentCard";
 
 export const ArticlePage: React.FunctionComponent = () => {
   const { id } = useParams();
@@ -36,17 +37,19 @@ export const ArticlePage: React.FunctionComponent = () => {
                 </Link>
               </p>
             </section>
-            <section className="card grow w-1/2 m-6 overflow-y-auto-scroll flex flex-col bg-sky-950 border-sky-50 border-1 text-sky-50">
-              Commentaires           
+            <section className="card grow w-1/2 m-6 overflow-y-auto-scroll flex flex-col">
               {article.comments && article.comments.length > 0 && (
-                  article.comments.map(comment => (
-                    <div className="card bg-sky-950 border-sky-50 border-1 text-sky-50">
-                      <p>@{comment.user.name} . {comment.creation_date.split('T')[0]}</p>
-                      <p>{comment.content}</p>
-                    </div>
-                  ))
-                )}
-            </section>            
+              <>
+                <h2 className="mb-4">Commentaires</h2>
+                {article.comments.map(comment => (
+                  <CommentCard key={comment.comment_id} comment={comment} />
+                ))}
+              </>
+            )}
+             {!loading && article.comments && article.comments.length === 0 && (
+                <p>Pas encore de commentaires pour cet article.</p>
+              )}
+            </section>          
           </>
         ) : (
           !loading &&

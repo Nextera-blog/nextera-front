@@ -14,7 +14,7 @@ export const AuthorDetailsPage: React.FunctionComponent = () => {
 
   useEffect(() => {
     if (author) {
-      setBioText(author.bio);
+      setBioText(author.bio || '');
     }
   }, [author]);
 
