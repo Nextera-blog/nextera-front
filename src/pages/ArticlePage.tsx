@@ -4,6 +4,7 @@ import { getArticleById } from "../services/articles";
 import useFetch from "../hooks/useFetch";
 import DataFetchingState from "../components/DataFetchingState";
 import CommentCard from "../components/CommentCard";
+import { capitalizeFirstLetter } from "../utils/utils";
 
 export const ArticlePage: React.FunctionComponent = () => {
   const { id } = useParams();
@@ -37,10 +38,10 @@ export const ArticlePage: React.FunctionComponent = () => {
 
               {article.tags && article.tags.length > 0 && (
                 <div>
-                  <h2>Tags :</h2>
+                  {/* <h2>Tags :</h2> */}
                   <div>
                     {article.tags.map((tag) => (
-                      <span key={tag.tag_id}>{tag.name}</span>
+                      <span key={tag.tag_id} className="tag">{capitalizeFirstLetter(tag.name)}</span>
                     ))}
                   </div>
                 </div>

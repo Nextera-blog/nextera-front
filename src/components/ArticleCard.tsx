@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Author, Tag } from "../types/api";
+import { capitalizeFirstLetter } from "../utils/utils";
 
 export type PostCardType = {
   articleId: number;
@@ -36,10 +37,10 @@ export const ArticleCard = (props: PostCardType) => {
 
         {tags && tags.length > 0 && (
           <div>
-            <h2>Tags :</h2>
+            {/* <h2>Tags :</h2> */}
             <div>
               {tags.map((tag) => (
-                <span key={tag.tag_id}>{tag.name}</span>
+                <span key={tag.tag_id} className="tag">{capitalizeFirstLetter(tag.name)}</span>
               ))}
             </div>
           </div>
