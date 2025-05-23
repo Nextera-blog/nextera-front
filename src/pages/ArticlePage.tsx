@@ -13,12 +13,10 @@ export const ArticlePage: React.FunctionComponent = () => {
     data: article,
   } = useFetch<Article>(getArticleById, id);
 
-  // if (article) {
-  //   // const creationDate = article.creation_date.split('T')[0];
-  //   console.log("Article : ", article);
-  //   console.log("Article avant rendu :", article);
-  //   console.log("Article.author avant rendu :", article?.author);
-  // }
+  if (article) {
+    // const creationDate = article.creation_date.split('T')[0];
+    console.log("Article : ", article);
+  }
 
   return (
     <DataFetchingState loading={loading} error={error}>
@@ -36,6 +34,17 @@ export const ArticlePage: React.FunctionComponent = () => {
                   {article.author.name}
                 </Link>
               </p>
+
+              {article.tags && article.tags.length > 0 && (
+                <div>
+                  <h2>Tags :</h2>
+                  <div>
+                    {article.tags.map((tag) => (
+                      <span key={tag.tag_id}>{tag.name}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </section>
             <section className="card grow m-6 overflow-y-auto-scroll flex flex-col md:w-4/5 comments-section">
               {article.comments && article.comments.length > 0 && (
