@@ -8,7 +8,7 @@ export type PostCardType = {
   author: {
     // author_id: number;
     user: number; // See if we choose 'user' or 'author_id' 
-    bio: string;
+    bio: string | null;
     join_date: string;
     // username: string;
     profile_picture_url: string | null;

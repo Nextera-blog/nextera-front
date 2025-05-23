@@ -22,10 +22,10 @@ export const ArticlePage: React.FunctionComponent = () => {
 
   return (
     <DataFetchingState loading={loading} error={error}>
-      <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
+      <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">      
         {article ? (
           <>
-            <section className="card grow w-1/2 m-6 overflow-y-auto-scroll flex flex-col">
+            <section className="card grow m-6 overflow-y-auto-scroll flex flex-col">
               <h1 className="card-title">{article.title}</h1>
               <p className="whitespace-pre-wrap py-8 mx-8 my-4 border-y-2 border-sky-600 grow">
                 {article.content}
@@ -37,7 +37,7 @@ export const ArticlePage: React.FunctionComponent = () => {
                 </Link>
               </p>
             </section>
-            <section className="card grow w-1/2 m-6 overflow-y-auto-scroll flex flex-col">
+            <section className="card grow m-6 overflow-y-auto-scroll flex flex-col">
               {article.comments && article.comments.length > 0 && (
               <>
                 <h2 className="mb-4">Commentaires</h2>
