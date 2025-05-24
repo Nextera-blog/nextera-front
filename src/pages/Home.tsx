@@ -20,7 +20,8 @@ export const Home = () => {
                 title={article.title}
                 content={article.content}
                 creationDate={article.creation_date}
-                author={article.author}
+                author={article.author} 
+                tags={article.tags}
                 key={article.article_id}
               />
             ))}
