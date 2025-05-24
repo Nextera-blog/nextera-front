@@ -29,7 +29,7 @@ export const ArticleCard = (props: PostCardType) => {
     <Link to={url}>
       <article className="card min-h-40">
         <h2 className="card-title">{title}</h2>
-        <p className="my-4 truncate">{content}</p>
+        <p className="my-4 line-clamp-5">{content}</p>
         {/* author.usename instead of author.name */}
         <h4>
           {author ? author.name : "Inconnu"}, {date}
