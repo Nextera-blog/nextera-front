@@ -30,8 +30,8 @@ export const ArticlePage: React.FunctionComponent = () => {
                 {article.content}
               </p>
               <p className="my-4 mr-8 text-end">
-                Publié le {article.creation_date.split("T")[0]} par{" "}
-                <Link to={`/authors/${article.author.user}`}>
+                Publié le {new Date(article.creation_date).toLocaleDateString("fr-FR")} par{" "}
+                <Link to={`/authors/${article.author.user}`} className="hover:text-sky-600">
                   {article.author.name}
                 </Link>
               </p>

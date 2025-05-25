@@ -67,7 +67,7 @@ export const AuthorDetailsPage: React.FunctionComponent = () => {
             <h2 className="card-title text-2xl text-center m-4">{(author.articles.length > 1) ? 'Ses articles' : 'Son article'}</h2>
             <ul className="whitespace-pre-wrap py-2 mx-8 border-y-2 border-sky-600 grow">
               {author.articles && author.articles.map((article) => (
-                <li className="py-2" key={article.article_id}><Link to={`/articles/${article.article_id}`}>{article.title}</Link></li>
+                <li className="py-2" key={article.article_id}><Link to={`/articles/${article.article_id}`} className="hover:text-sky-600">{article.title}</Link></li>
               ))}
             </ul>
           </section>
