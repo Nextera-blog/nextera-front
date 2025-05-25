@@ -14,10 +14,9 @@ export const ArticlePage: React.FunctionComponent = () => {
     data: article,
   } = useFetch<Article>(getArticleById, id);
 
-  if (article) {
-    // const creationDate = article.creation_date.split('T')[0];
-    console.log("Article : ", article);
-  }
+  // if (article) {
+  //   console.log("Article : ", article);
+  // }
 
   return (
     <DataFetchingState loading={loading} error={error}>

@@ -50,3 +50,17 @@ export type AuthorDetails = {
   join_date: string;
   articles: ArticleMinimal[];
 }
+
+export type CurrentUser = {
+  // is_superuser is missing in the API response at /users/current/
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  author: Author;
+  role: {
+    role_id: number;
+    role_name: string;
+  } | null;
+}

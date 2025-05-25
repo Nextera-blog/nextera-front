@@ -1,9 +1,17 @@
 import { NavLink, useNavigate } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext";
+import useFetch from "../hooks/useFetch";
+import { CurrentUser } from "../types/api";
+import { getCurrentUser } from "../services/users";
 
 export const Header = () => {
   const navigate = useNavigate();
   const { isLoggedIn, logout } = useAuth();
+  const { loading, error, data: currentUser } = useFetch<CurrentUser>(getCurrentUser, isLoggedIn);
+
+  console.log("currentUser : ", currentUser);
+
+  const isAuthorisedToCreateArticle = currentUser?.author?.user === currentUser?.id && (currentUser?.role?.role_name === 'Admin' || currentUser?.role?.role_name === 'Author');
 
   const handleAuthButtonClick = () => {
     if (isLoggedIn) {
@@ -22,7 +30,9 @@ export const Header = () => {
       </div>
       <nav className="flex justify-center items-center">
         <NavLink to='/' className="nav-link">Accueil</NavLink>
-        <NavLink to='/redaction-article' className="nav-link">Rédiger un article</NavLink>
+        {isAuthorisedToCreateArticle && (
+          <NavLink to='/redaction-article' className="nav-link">Rédiger un article</NavLink>
+        )}
       </nav>
       <button type="button" onClick={handleAuthButtonClick} className="nextera-button">
         {isLoggedIn ? 'Se déconnecter' : 'Se connecter'}
