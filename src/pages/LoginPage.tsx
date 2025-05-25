@@ -30,8 +30,20 @@ const LoginPage: React.FC = () => {
       );
 
       if (response.status === 200) {
-        login(response.data.access, response.data.refresh);
-        navigate("/");
+        const { access, refresh } = response.data;
+        localStorage.setItem('access_token', access);
+        localStorage.setItem('refresh_token', refresh);
+
+        try {
+          const currentUserResponse = await axiosInstance.get<{ id: number }>('/users/current/');
+          login(access, refresh, currentUserResponse.data.id);
+          navigate("/");
+        } catch (currentUserResponse) {
+          console.error("Erreur lors de la récupération de l'utilisateur courant : ", currentUserResponse);
+          setError("Erreur lors de la connexion.");
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
+        }
       } else {
         setError(response.data?.detail || "Identifiants incorrects.");
       }
