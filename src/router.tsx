@@ -7,6 +7,7 @@ import { ArticlePage } from "./pages/ArticlePage";
 import { RedactionArticlePage } from "./pages/RedactionArticlePage";
 import { ErrorPage } from "./pages/ErrorPage";
 import { AuthorDetailsPage } from "./pages/AuthorDetailsPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -32,7 +33,12 @@ export const router = createBrowserRouter([
       },
       {
         path: "/redaction-article",
-        element: <RedactionArticlePage />,
+        element: (
+          // TO SEE WITH backend : which roles ? + superAdmin ?
+          <ProtectedRoute allowedRoles={['Admin', 'Author']}>
+            <RedactionArticlePage />,
+          </ProtectedRoute>
+        )
       },
       {
         path: "/authors/:id",

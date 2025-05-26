@@ -7,6 +7,7 @@ interface AuthContextType {
   login: (accessToken: string, refreshToken: string, user: CurrentUser) => void;
   logout: () => void;
   user: CurrentUser | null;
+  isLoadingAuth: boolean; // Loading state to avoid problems with the protected route (now, the protected route waits for the load to finish before deciding whether the user is logged in or not)
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -14,6 +15,7 @@ const AuthContext = createContext<AuthContextType>({
   login: () => {},
   logout: () => {},
   user: null,
+  isLoadingAuth: true,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -25,6 +27,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<CurrentUser | null>(null);
+  const [isLoadingAuth, setIsLoadingAuth] = useState<boolean>(true);
 
   const logout = useCallback(() => {
     localStorage.removeItem('access_token');
@@ -36,6 +39,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token');
     const fetchCurrentUser = async () => {
+      setIsLoadingAuth(true);
       try {
         const currentUserData = await getCurrentUser();
         setUser(currentUserData);
@@ -44,11 +48,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       } catch (error: any) {
         console.error("Erreur lors de la récupéraiton de l'utilisateur courant : ", error);
         logout();
+      } finally {
+        setIsLoadingAuth(false);
       }
     };
 
     if (accessToken) {
       fetchCurrentUser();
+    } else {
+      setIsLoadingAuth(false);
     }
   }, [logout]);
 
@@ -61,7 +69,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, user }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, user, isLoadingAuth }}>
       {children}
     </AuthContext.Provider>
   );
