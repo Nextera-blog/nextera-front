@@ -34,8 +34,8 @@ export const router = createBrowserRouter([
       {
         path: "/redaction-article",
         element: (
-          // TO SEE WITH backend : which roles ? + superAdmin ?
-          <ProtectedRoute allowedRoles={['Admin', 'Author']}>
+          // 'Admin' no longer authorized to create an article
+          <ProtectedRoute allowedRoles={['Author']}>
             <RedactionArticlePage />,
           </ProtectedRoute>
         )

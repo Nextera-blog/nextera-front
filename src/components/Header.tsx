@@ -9,7 +9,7 @@ export const Header = () => {
   // console.log("user : ", user);
   // console.log("user.role.role : ", user?.role?.role_name);
 
-  const isAuthorisedToCreateArticle = user?.author?.user === user?.id && (user?.role?.role_name === 'Admin' || user?.role?.role_name === 'Author');
+  const isAuthorisedToCreateArticle = user?.author?.user === user?.id && user?.role?.role_name === 'Author';
 
   const handleAuthButtonClick = () => {
     if (isLoggedIn) {
