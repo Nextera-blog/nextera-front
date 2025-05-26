@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
-import axiosInstance from "../api/axiosInstance";
 import { CurrentUser } from "../types/api";
+import { getCurrentUser } from "../services/users";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -37,10 +37,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const accessToken = localStorage.getItem('access_token');
     const fetchCurrentUser = async () => {
       try {
-        const response = await axiosInstance.get<CurrentUser>('/users/current/');
-        // console.log("response.data : ", response.data);
-        setUser(response.data);
-        console.log("User in fetchCurrentUser : ", response.data);
+        const currentUserData = await getCurrentUser();
+        setUser(currentUserData);
+        // console.log("currentUserData : ", currentUserData);
         setIsLoggedIn(true);
       } catch (error: any) {
         console.error("Erreur lors de la récupéraiton de l'utilisateur courant : ", error);
@@ -58,7 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.setItem('refresh_token', refreshToken);
     setIsLoggedIn(true);
     setUser(user);
-    console.log("User in login:", user);
+    // console.log("User in login:", user);
   };
 
   return (

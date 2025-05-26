@@ -1,17 +1,13 @@
 import { NavLink, useNavigate } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext";
-// import useFetch from "../hooks/useFetch";
-// import { CurrentUser } from "../types/api";
-// import { getCurrentUser } from "../services/users";
 
 export const Header = () => {
   const navigate = useNavigate();
   const { isLoggedIn, logout, user } = useAuth();
-  // const { loading, error, data: currentUser } = useFetch<CurrentUser>(getCurrentUser, isLoggedIn);
 
-  console.log("isLoggedIn : ", isLoggedIn);
-  console.log("user : ", user);
-  console.log("user.role.role : ", user?.role?.role_name);
+  // console.log("isLoggedIn : ", isLoggedIn);
+  // console.log("user : ", user);
+  // console.log("user.role.role : ", user?.role?.role_name);
 
   const isAuthorisedToCreateArticle = user?.author?.user === user?.id && (user?.role?.role_name === 'Admin' || user?.role?.role_name === 'Author');
 
