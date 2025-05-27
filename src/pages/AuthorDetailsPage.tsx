@@ -41,7 +41,7 @@ export const AuthorDetailsPage: React.FunctionComponent = () => {
     <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
       {author ? (
         <>
-          <section className='card grow w-1/2 m-6 overflow-y-auto-scroll flex flex-col'>
+          <section className='card grow w-1/2 m-6 overflow-y-auto flex flex-col'>
             <p className="text-xl text-center mt-4">Qui est...</p>
             <h1 className='card-title'>{author.name}</h1>
             <div className="py-4 mx-8 my-4 border-y-2 border-sky-600 grow">
@@ -65,7 +65,7 @@ export const AuthorDetailsPage: React.FunctionComponent = () => {
               )}
             </div>
           </section>
-          <section className='card grow w-1/2 m-6 overflow-y-auto-scroll flex flex-col'>
+          <section className='card grow w-1/2 m-6 overflow-y-auto flex flex-col'>
             <h2 className="card-title text-2xl text-center m-4">{(author.articles.length > 1) ? 'Ses articles' : 'Son article'}</h2>
             <ul className="whitespace-pre-wrap py-2 mx-8 border-y-2 border-sky-600 grow">
               {author.articles && author.articles.map((article) => (

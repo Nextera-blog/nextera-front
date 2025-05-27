@@ -34,9 +34,9 @@ export const Header = () => {
       </nav>
       <div>
         {isLoggedIn && (
-          <Link to="/profile">{user?.username}</Link>
+          <Link to="/profile" className="mr-8 hover:underline hover:underline-offset-3 hover:font-bold">{user?.username}</Link>
         )}
-        <button type="button" onClick={handleAuthButtonClick} className="nextera-button">
+        <button type="button" onClick={handleAuthButtonClick} className="nextera-button mr-4">
           {isLoggedIn ? 'Se déconnecter' : 'Se connecter'}
         </button>
       </div>

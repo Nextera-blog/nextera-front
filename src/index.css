@@ -109,6 +109,16 @@
     padding: 2px;
     margin-right: 2px;
   }
+  
+  .link {
+    text-decoration-line: underline;
+    text-underline-position: under;
+  }
+
+  .link:hover {
+    color: var(--color-sky-600);
+    font-weight: 700;
+  }
 }
 
 @theme {

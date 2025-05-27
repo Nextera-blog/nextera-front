@@ -36,7 +36,7 @@ export const ArticleCard = (props: PostCardType) => {
       </Link>
       <h4>
         {author ? (
-          <Link to={`/authors/${author.user}`} className="hover:text-sky-600">
+          <Link to={`/authors/${author.user}`} className="link link:hover">
             {author.name}
           </Link>
         ) : (

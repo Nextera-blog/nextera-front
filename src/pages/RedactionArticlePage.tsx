@@ -86,7 +86,7 @@ export const RedactionArticlePage: React.FunctionComponent = () => {
           <input type="text" name="title" id="title" className="md:p-3" required />
 
           <label htmlFor="content">Contenu de l'article</label>
-          <textarea name="content" id="content" className="grow overflow-y-scroll"></textarea>
+          <textarea name="content" id="content" className="grow overflow-y"></textarea>
 
           {/* <button type="submit" className="self-center mt-2">Valider</button> */}
 
