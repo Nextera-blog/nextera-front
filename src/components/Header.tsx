@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext";
 
 export const Header = () => {
@@ -32,9 +32,14 @@ export const Header = () => {
           <NavLink to='/redaction-article' className="nav-link">Rédiger un article</NavLink>
         )}
       </nav>
-      <button type="button" onClick={handleAuthButtonClick} className="nextera-button">
-        {isLoggedIn ? 'Se déconnecter' : 'Se connecter'}
-      </button>
+      <div>
+        {isLoggedIn && (
+          <Link to="/profile">{user?.username}</Link>
+        )}
+        <button type="button" onClick={handleAuthButtonClick} className="nextera-button">
+          {isLoggedIn ? 'Se déconnecter' : 'Se connecter'}
+        </button>
+      </div>
     </header>
   )
 }

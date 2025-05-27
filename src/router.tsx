@@ -8,6 +8,7 @@ import { RedactionArticlePage } from "./pages/RedactionArticlePage";
 import { ErrorPage } from "./pages/ErrorPage";
 import { AuthorDetailsPage } from "./pages/AuthorDetailsPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ProfilePage } from "./pages/ProfilePage";
 
 export const router = createBrowserRouter([
   {
@@ -36,13 +37,21 @@ export const router = createBrowserRouter([
         element: (
           // 'Admin' no longer authorized to create an article
           <ProtectedRoute allowedRoles={['Author']}>
-            <RedactionArticlePage />,
+            <RedactionArticlePage />
           </ProtectedRoute>
         )
       },
       {
         path: "/authors/:id",
         element: <AuthorDetailsPage />,
+      },
+      {
+        path: "/profile",
+        element: (
+          <ProtectedRoute allowedRoles={['Admin', 'Author', 'Visitor']}>
+            <ProfilePage />
+          </ProtectedRoute>
+        )
       },
     ],
   },
