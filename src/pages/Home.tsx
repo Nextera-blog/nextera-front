@@ -1,11 +1,12 @@
 import { ArticleCard } from "../components/ArticleCard";
-import { Article } from "../types/api";
+// import { Article } from "../types/api";
+import { ArticleWithReactions } from "../types/api";
 import { getArticles } from "../services/articles";
 import useFetch from "../hooks/useFetch";
 import DataFetchingState from "../components/DataFetchingState";
 
 export const Home = () => {
-  const { loading, error, data: articles } = useFetch<Article[]>(getArticles);
+  const { loading, error, data: articles } = useFetch<ArticleWithReactions[]>(getArticles);
 
   return (
     <DataFetchingState loading={loading} error={error}>
@@ -22,6 +23,7 @@ export const Home = () => {
                 creationDate={article.creation_date}
                 author={article.author} 
                 tags={article.tags}
+                article_reactions={article.article_reactions}
                 key={article.article_id}
               />
             ))}
