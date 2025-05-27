@@ -5,8 +5,11 @@ import { useAuth } from "../contexts/AuthContext";
 import { useLocation } from "react-router-dom";
 
 const TempAuth = () => {
-  const { isLoggedIn, userId } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const location = useLocation();
+
+  const userId = user?.id;
+  const userRole = user?.role?.role_name;
 
   // useEffect(() => {
   //     console.log('Données d\'authentification : ', { isLoggedIn, userId });
@@ -16,8 +19,9 @@ const TempAuth = () => {
     console.log(`État d'authentification pour [${location.pathname}] :`, {
       isLoggedIn,
       userId,
+      userRole,
     });
-  }, [isLoggedIn, userId, location.pathname]);
+  }, [isLoggedIn, userId, userRole, location.pathname]);
 
   return null;
 };

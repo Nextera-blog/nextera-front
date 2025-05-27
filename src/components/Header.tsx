@@ -3,7 +3,13 @@ import { useAuth } from "../contexts/AuthContext";
 
 export const Header = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, user } = useAuth();
+
+  // console.log("isLoggedIn : ", isLoggedIn);
+  // console.log("user : ", user);
+  // console.log("user.role.role : ", user?.role?.role_name);
+
+  const isAuthorisedToCreateArticle = user?.author?.user === user?.id && user?.role?.role_name === 'Author';
 
   const handleAuthButtonClick = () => {
     if (isLoggedIn) {
@@ -22,7 +28,9 @@ export const Header = () => {
       </div>
       <nav className="flex justify-center items-center">
         <NavLink to='/' className="nav-link">Accueil</NavLink>
-        <NavLink to='/redaction-article' className="nav-link">Rédiger un article</NavLink>
+        {isAuthorisedToCreateArticle && (
+          <NavLink to='/redaction-article' className="nav-link">Rédiger un article</NavLink>
+        )}
       </nav>
       <button type="button" onClick={handleAuthButtonClick} className="nextera-button">
         {isLoggedIn ? 'Se déconnecter' : 'Se connecter'}

@@ -11,7 +11,8 @@ export const RedactionArticlePage: React.FunctionComponent = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const { userId } = useAuth();
+  const { user } = useAuth();
+  const userId = user?.id;
   
   useEffect(() => {
     if (!localStorage.getItem("access_token")) {

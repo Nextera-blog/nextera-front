@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { AuthorDetails } from "../types/api";
 import { useAuth } from "../contexts/AuthContext";
 import { getAuthorDetails } from "../services/authors";
@@ -8,7 +9,8 @@ import DataFetchingState from "../components/DataFetchingState";
 export const AuthorDetailsPage: React.FunctionComponent = () => {
   const { id: authorIdFromRoute } = useParams();
   const { loading, error, data: author } = useFetch<AuthorDetails>(getAuthorDetails, authorIdFromRoute);
-  const { userId: LoggedInUserId } = useAuth();
+  const { user } = useAuth();
+  const loggedInUserId = user?.id;
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [bioText, setBioText] = useState<string>('');
 
@@ -18,7 +20,7 @@ export const AuthorDetailsPage: React.FunctionComponent = () => {
     }
   }, [author]);
 
-  const isCurrentUserAuthor = LoggedInUserId !== null && author?.user === LoggedInUserId;
+  const isCurrentUserAuthor = loggedInUserId !== null && author?.user === loggedInUserId;
 
   const handleUpdateClick = () => {
     setIsUpdating(true);

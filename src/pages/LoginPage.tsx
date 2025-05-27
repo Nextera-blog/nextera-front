@@ -4,6 +4,7 @@ import axios, { AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
 import { useAuth } from "../contexts/AuthContext";
+import { CurrentUser } from "../types/api";
 
 interface LoginResponse {
   access: string;
@@ -35,8 +36,8 @@ const LoginPage: React.FC = () => {
         localStorage.setItem('refresh_token', refresh);
 
         try {
-          const currentUserResponse = await axiosInstance.get<{ id: number }>('/users/current/');
-          login(access, refresh, currentUserResponse.data.id);
+          const currentUserResponse = await axiosInstance.get<CurrentUser>('/users/current/');
+          login(access, refresh, currentUserResponse.data);
           navigate("/");
         } catch (currentUserResponse) {
           console.error("Erreur lors de la récupération de l'utilisateur courant : ", currentUserResponse);
