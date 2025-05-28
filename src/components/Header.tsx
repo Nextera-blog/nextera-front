@@ -1,7 +1,15 @@
-import { NavLink, useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
-export const Header = () => {
+interface HeaderProps {
+  onToggleDarkMode: () => void;
+  darkMode: boolean;
+}
+
+export const Header: React.FC<HeaderProps> = ({
+  onToggleDarkMode,
+  darkMode,
+}) => {
   const navigate = useNavigate();
   const { isLoggedIn, logout, user } = useAuth();
 
@@ -9,32 +17,46 @@ export const Header = () => {
   // console.log("user : ", user);
   // console.log("user.role.role : ", user?.role?.role_name);
 
-  const isAuthorisedToCreateArticle = user?.author?.user === user?.id && user?.role?.role_name === 'Author';
+  const isAuthorisedToCreateArticle =
+    user?.author?.user === user?.id && user?.role?.role_name === "Author";
 
   const handleAuthButtonClick = () => {
     if (isLoggedIn) {
       logout();
-      navigate('/');
+      navigate("/");
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   };
 
   return (
-    <header className="w-full flex border-b-1 border-sky-500 py-2  px-2 mb-2 flex justify-between items-center">
-      <div className="flex items-center">
+    <header className="w-full grid grid-cols-3 border-b-1 py-2 px-2 items-center">
+      <div className="justify-self-start flex items-center">
         <img src="/nextera-logo.png" alt="Logo Nextera" className="w-10 mr-2" />
-        <p className="hidden md:inline md:text-base">Nextera blog</p>
+        <p className="hidden md:inline md:text-xl">Nextera blog</p>
       </div>
-      <nav className="flex justify-center items-center">
-        <NavLink to='/' className="nav-link">Accueil</NavLink>
+      <nav className="justify-self-center flex items-center">
+        <NavLink to="/" className="nav-link">
+          Accueil
+        </NavLink>
         {isAuthorisedToCreateArticle && (
-          <NavLink to='/redaction-article' className="nav-link">Rédiger un article</NavLink>
+          <NavLink to="/redaction-article" className="nav-link">
+            Rédiger un article
+          </NavLink>
         )}
       </nav>
-      <button type="button" onClick={handleAuthButtonClick} className="nextera-button">
-        {isLoggedIn ? 'Se déconnecter' : 'Se connecter'}
-      </button>
+      <div className="justify-self-end flex items-center">
+        <button
+          type="button"
+          onClick={handleAuthButtonClick}
+          className="nextera-button"
+        >
+          {isLoggedIn ? "Se déconnecter" : "Se connecter"}
+        </button>
+        <button onClick={onToggleDarkMode} className="mx-8">
+          {darkMode ? "Mode Clair" : "Mode Sombre"}
+        </button>
+      </div>
     </header>
-  )
-}
+  );
+};
