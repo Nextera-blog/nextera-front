@@ -35,6 +35,7 @@ export type Article = {
   author: Author;
   tags: Tag[];
   comments: Comment[];
+  article_reactions?: Reaction[];
 }
 
 export type ArticleMinimal = {
@@ -72,6 +73,6 @@ export type Reaction = {
   counter: number;
 }
 
-export type ArticleWithReactions = Article & {
-  article_reactions?: Reaction[]; // TO SEE : maybe just adding this line to Article type ?
-}
+// export type ArticleWithReactions = Article & {
+//   article_reactions?: Reaction[]; // TO SEE : maybe just adding this line to Article type ?
+// }

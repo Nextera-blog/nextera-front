@@ -1,12 +1,14 @@
 import { ArticleCard } from "../components/ArticleCard";
 // import { Article } from "../types/api";
-import { ArticleWithReactions } from "../types/api";
+import { Article } from "../types/api";
 import { getArticles } from "../services/articles";
 import useFetch from "../hooks/useFetch";
 import DataFetchingState from "../components/DataFetchingState";
 
 export const Home = () => {
-  const { loading, error, data: articles } = useFetch<ArticleWithReactions[]>(getArticles);
+  const { loading, error, data: articles } = useFetch<Article[]>(getArticles);
+
+  console.log("Articles dans Home : ", articles);
 
   return (
     <DataFetchingState loading={loading} error={error}>
