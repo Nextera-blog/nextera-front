@@ -60,13 +60,13 @@ export const ArticlePage: React.FunctionComponent = () => {
                   {article?.article_reactions &&
                     article?.article_reactions.map((reaction) => (
                       <div
-                        className="flex flex-col items-center justify-center mr-4"
+                        className="flex flex-col items-center justify-center mr-4 cursor-pointer"
                         key={reaction.reaction_type_id}
                         onClick={() =>
                           handleReactionClick(reaction.reaction_type_id)
                         }
                       >
-                        <div className="mt-3 text-lg">{reaction.emoji}</div>
+                        <div className="mt-3 text-lg transition-transform duration-200 hover:scale-200 origin-center">{reaction.emoji}</div>
                         <div
                           className={`text-sm ${
                             reaction.counter === 0 ? "text-sky-200" : ""
