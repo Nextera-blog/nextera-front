@@ -1,19 +1,21 @@
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useState } from "react";
-import { updateProfile } from "../services/users";
+import { getCurrentUser, updateProfile } from "../services/users";
+import { NotificationCard } from "../components/NotificationCard";
 
 export const ProfilePage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, login } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState(user?.username || ""); // TO SEE WITH BACKEND : can this field be modified ?
-  const [email, setEmail] = useState(user?.email || ""); // TO SEE WITH BACKEND : can this field be modified ?
+  const [username, setUsername] = useState(user?.username || "");
+  const [email, setEmail] = useState(user?.email || "");
   const [firstName, setFirstName] = useState(user?.first_name || "");
   const [lastName, setLastName] = useState(user?.last_name || "");
   const [authorName, setAuthorName] = useState(user?.author?.name || "");
   const [bio, setBio] = useState(user?.author?.bio || "");
-  const [updateError, setUpdateError] = useState<string | null>(null); // TO CHANGE : MODAL TO USE
-  const [updateSuccess, setUpdateSuccess] = useState<boolean>(false); // TO CHANGE : MODAL TO USE
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string | null>(null);
+  const [modalError, setModalError] = useState<boolean>(false);
 
   console.log("user : ", user);
 
@@ -24,8 +26,9 @@ export const ProfilePage: React.FC = () => {
 
   const handleEditToggle = async () => {
     if (isEditing) {
-      setUpdateError(null);
-      setUpdateSuccess(false);
+      setModalError(false);
+      setModalMessage(null);
+      setOpenModal(false);
       try {
         const userData = {
           id: user.id,
@@ -39,23 +42,39 @@ export const ProfilePage: React.FC = () => {
           },
         };
 
-        
-        console.log("Données envoyées pour la MAJ :", userData); // TEMP for debugging
-        
-        if (user?.id) {
-          await updateProfile(userData, user.id);
-          setUpdateSuccess(true);
-          setIsEditing(false);
-          alert("Profil mis à jour avec succès !");
-        } else { // TEMP for debuggin
-          console.error("ID du user non disponible.");
+        console.log("Données envoyées pour la MAJ :", userData);
+
+        await updateProfile(userData, user.id);
+        setModalMessage("Profil mis à jour avec succès !");
+        setModalError(false);
+        setOpenModal(true);
+        setIsEditing(false);
+
+        // Updating the context
+        try {
+          const updatedUser = await getCurrentUser();
+          const accessToken = localStorage.getItem('access_token');
+          const refreshToken = localStorage.getItem('refresh_token');
+          if (accessToken && refreshToken) {
+            login(accessToken, refreshToken, updatedUser);
+          }
+        } catch (getCurrentUserError) {
+          console.error("Erreur lors de la récupération de l'utilisateur mis à jour : ", getCurrentUserError);
+          setModalMessage("Mise à jour sauvegardé, mais erreur lors du rafraîchissemnet des informations du profil.");
+          setModalError(true);
+          setOpenModal(true);
         }
+
       } catch (error: any) {
         console.error("Erreur lors de la mise à jour du profil : ", error);
-        setUpdateError("Erreur lors de la mise à jour du profil.");
+        setModalMessage("Erreur lors de la mise à jour du profil.");
+        setModalError(true);
+        setOpenModal(true);
         if (error.response) {
           console.log("Réponse du backend :", error.response.data);
         }
+      } finally {
+        setIsEditing(false);
       }
     } else {
       setIsEditing(true);
@@ -72,10 +91,7 @@ export const ProfilePage: React.FC = () => {
           : "Cliquez ici pour modifier vos informations"}
       </button>
 
-      {updateError && <p className="text-red-500">{updateError}</p>}
-      {updateSuccess && (
-        <p className="text-green-500">Profil mis à jour avec succès !</p>
-      )}
+      {openModal && <NotificationCard message={modalMessage} error={modalError} openModal={openModal} />}
 
       <section className="card grow m-6 overflow-y-auto flex flex-col md:w-4/5 article-section">
         <h2 className="card-title text-2xl text-center m-4">
