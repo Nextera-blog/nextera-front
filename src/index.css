@@ -5,39 +5,45 @@
   font-family: monospace;
 }
 
-#root{
+#root {
   width: 100dvw;
   height: 100dvh;
 }
 
 @layer base {
+  header,
+  footer {
+    border-color: var(--color-sky-950);
+  }
+
   button {
     padding: 5px 15px;
     border-radius: 7px;
-    background-color: var(--color-sky-600);
-    color: var(--color-sky-50);
-    font-size: var(--text-sm);
+    border: 1px solid var(--color-sky-950);
+    background-color: var(--color-sky-200);
+    color: var(--color-sky-950);
+    font-size: var(--text-lg);
     width: fit-content;
   }
-  
+
   button:hover {
-    background-color: var(--color-sky-400);
+    background-color: var(--color-sky-300);
     cursor: pointer;
   }
-  
+
   button:focus {
     outline: 2px solid var(--color-sky-200);
   }
 
   .nav-link {
-    font-size: var(--text-base);
+    font-size: var(--text-lg);
     margin: 0 15px;
     text-wrap: wrap;
     height: 100%;
   }
 
   .nav-link:hover {
-    color: var(--color-sky-300);
+    color: var(--color-sky-500);
   }
 
   .nav-link:focus {
@@ -46,29 +52,31 @@
   }
 
   h1 {
-    font-size: var(--text-3xl);
+    font-size: var(--text-4xl);
     text-align: center;
     font-weight: bold;
     margin: 16px;
   }
 
   h2 {
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     font-weight: bold;
   }
 
   h3 {
-    font-size: var(--text-lg);
+    font-size: var(--text-xl);
     font-weight: bold;
   }
 
   h4 {
     text-align: right;
-    font-size: var(--text-md);
+    font-size: var(--text-lg);
   }
-  
-  p {
-    font-size: var(--text-base);
+
+  p,
+  li,
+  a {
+    font-size: var(--text-lg);
   }
 
   label {
@@ -77,10 +85,11 @@
     color: var(--color-sky-500);
   }
 
-  input, textarea {
+  input,
+  textarea {
     color: var(--color-sky-950);
     background-color: var(--color-sky-200);
-    font-size: var(--text-md);
+    font-size: var(--text-lg);
     padding: 5px;
     border-radius: 5px;
   }
@@ -109,6 +118,16 @@
     padding: 2px;
     margin-right: 2px;
   }
+
+  .article-section {
+    flex-basis: 50%; /* Initial size on large screens */
+    min-width: 300px;
+  }
+
+  .comments-section {
+    flex-basis: 50%; /* Initial size on large screens */
+    min-width: 300px;
+  }
 }
 
 @theme {
@@ -125,22 +144,74 @@
   }
 }
 
-.article-section {
-  flex-basis: 50%; /* Initial size on large screens */
-  min-width: 300px;
-}
-
-.comments-section {
-  flex-basis: 50%; /* Initial size on large screens */
-  min-width: 300px;
-}
-
 @media (max-width: 767px) {
   .article-section,
   .comments-section {
     flex-basis: auto; /* Cancels flex-basis on small screens */
     width: 100%;
-    min-width: auto;   /* Cancels min-width on small screens */
+    min-width: auto; /* Cancels min-width on small screens */
     margin: 1rem 0;
   }
+}
+
+/* Dark mode */
+
+/* Default palette reference (doc Tailwind) :
+--color-blue-50: oklch(0.97 0.014 254.604);
+--color-blue-100: oklch(0.932 0.032 255.585);
+--color-blue-200: oklch(0.882 0.059 254.128);
+--color-blue-300: oklch(0.809 0.105 251.813);
+--color-blue-400: oklch(0.707 0.165 254.624);
+--color-blue-500: oklch(0.623 0.214 259.815);
+--color-blue-600: oklch(0.546 0.245 262.881);
+--color-blue-700: oklch(0.488 0.243 264.376);
+--color-blue-800: oklch(0.424 0.199 265.638);
+--color-blue-900: oklch(0.379 0.146 265.522);
+--color-blue-950: oklch(0.282 0.091 267.935); 
+  
+Hexa conversion :
+--color-blue-50: #f0f9ff
+--color-blue-100: #e0f2fe
+--color-blue-200: #bae6fd
+--color-blue-300: #7dd3fc
+--color-blue-400: #38bdf8
+--color-blue-500: #0ea5e9
+--color-blue-600: #0284c7
+--color-blue-700: #0369a1
+--color-blue-800: #075985
+--color-blue-900: #0c4a6e
+--color-blue-950: #082f49
+*/
+
+.dark {
+  --color-blue-50: #082f49;
+  --color-blue-100: #0c4a6e;
+  --color-blue-200: #075985;
+  --color-blue-300: #0369a1;
+  --color-blue-400: #0284c7;
+  --color-blue-500: #0ea5e9;
+  --color-blue-600: #38bdf8;
+  --color-blue-700: #7dd3fc;
+  --color-blue-800: #bae6fd;
+  --color-blue-900: #e0f2fe;
+  --color-blue-950: #f0f9ff;
+}
+
+.dark header,
+.dark footer {
+  border-color: var(--color-sky-500);
+}
+
+.dark button {
+  background-color: var(--color-sky-600);
+  color: var(--color-sky-50);
+}
+
+.dark button:hover {
+  background-color: var(--color-sky-400);
+  cursor: pointer;
+}
+
+.dark button:focus {
+  outline: 2px solid var(--color-sky-200);
 }
