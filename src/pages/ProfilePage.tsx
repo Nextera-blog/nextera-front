@@ -1,16 +1,19 @@
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useState } from "react";
+import { updateProfile } from "../services/users";
 
 export const ProfilePage: React.FC = () => {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [userName, setUserName] = useState(user?.username || ""); // TO SEE WITH BACKEND : can this field be modified ?
+  const [username, setUsername] = useState(user?.username || ""); // TO SEE WITH BACKEND : can this field be modified ?
   const [email, setEmail] = useState(user?.email || ""); // TO SEE WITH BACKEND : can this field be modified ?
   const [firstName, setFirstName] = useState(user?.first_name || "");
   const [lastName, setLastName] = useState(user?.last_name || "");
   const [authorName, setAuthorName] = useState(user?.author?.name || "");
   const [bio, setBio] = useState(user?.author?.bio || "");
+  const [updateError, setUpdateError] = useState<string | null>(null); // TO CHANGE : MODAL TO USE
+  const [updateSuccess, setUpdateSuccess] = useState<boolean>(false); // TO CHANGE : MODAL TO USE
 
   console.log("user : ", user);
 
@@ -19,9 +22,29 @@ export const ProfilePage: React.FC = () => {
     return <Navigate to="/login" />;
   }
 
-  const handleEditToggle = () => {
+  const handleEditToggle = async () => {
     if (isEditing) {
-      console.log("Logic to save to implement"); // TO DO
+      setUpdateError(null);
+      setUpdateSuccess(false);
+      try {
+        const userData = {
+          username,
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          author: {
+            name: authorName,
+            bio,
+          }
+        }
+        await updateProfile(userData);
+        setUpdateSuccess(true);
+        setIsEditing(false);
+        alert("Profil mis à jour avec succès !");
+      } catch (error: any) {
+        console.error("Erreur lors de la mise à jour du profil : ", error);
+        setUpdateError("Erreur lors de la mise à jour du profil.");
+      }
     } else {
       setIsEditing(true);
     }
@@ -35,14 +58,17 @@ export const ProfilePage: React.FC = () => {
         {isEditing ? "Modifiez vos informations puis cliquez ici pour sauvegarder" : "Cliquez ici pour modifier vos informations"}
       </button>
 
+      {updateError && <p className="text-red-500">{updateError}</p>}
+      {updateSuccess && <p className="text-green-500">Profil mis à jour avec succès !</p>}
+
       <section className="card grow m-6 overflow-y-auto flex flex-col md:w-4/5 article-section">
         <h2 className="card-title text-2xl text-center m-4">
           Profil Utilisateur
         </h2>
         <div className="py-4 mx-8 my-4 border-y-2 border-sky-600 grow flex flex-col gap-y-4">
           <div className="flex flex-col">
-            <label htmlFor="userName">Nom d'utilisateur :</label>
-            <input type="text" name="userName" id="userName" value={userName} onChange={(e) => setUserName(e.target.value)} readOnly={!isEditing} />
+            <label htmlFor="username">Nom d'utilisateur :</label>
+            <input type="text" name="username" id="username" value={username} onChange={(e) => setUsername(e.target.value)} readOnly={!isEditing} />
           </div>
           <div className="flex flex-col">
             <label htmlFor="email">email :</label>
