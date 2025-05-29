@@ -23,13 +23,13 @@ export const updateProfile = async (userData: {
     name?: string;
     bio?: string;
   };
-}): Promise<CurrentUser> => {
+}, userId: number): Promise<CurrentUser> => {
   try {
-    const response = await axiosInstance.put<CurrentUser>("/users/update/", userData);
+    const response = await axiosInstance.put<CurrentUser>(`/users/update/${userId}`, userData);
     return response.data;
   } catch (error: any) {
     console.error(
-      "Erreur lors de la mise à jour de l'utilisateur courant : ",
+      "Erreur lors de la mise à jour du profil de l'utilisateur courant : ",
       error
     );
     throw error;
