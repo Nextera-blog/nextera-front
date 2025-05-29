@@ -1,6 +1,6 @@
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getCurrentUser, updateProfile } from "../services/users";
 import { NotificationCard } from "../components/NotificationCard";
 
@@ -18,6 +18,15 @@ export const ProfilePage: React.FC = () => {
   const [modalError, setModalError] = useState<boolean>(false);
 
   console.log("user : ", user);
+
+  useEffect(() => {
+    if (openModal) {
+      const timer = setTimeout(() => {
+        setOpenModal(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [openModal]);
 
   if (!user) {
     console.log("Vous nêtes pas connecté.");
@@ -85,10 +94,10 @@ export const ProfilePage: React.FC = () => {
     <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
       <h1>Votre profil</h1>
 
-      <button onClick={handleEditToggle}>
+      <button onClick={handleEditToggle} className={isEditing ? "bg-sky-500 text-sky-50" : "bg-red-500 text-white"}>
         {isEditing
-          ? "Modifiez vos informations puis cliquez ici pour sauvegarder"
-          : "Cliquez ici pour modifier vos informations"}
+          ? "Sauvegarder"
+          : "Editer"}
       </button>
 
       {openModal && <NotificationCard message={modalMessage} error={modalError} openModal={openModal} />}
