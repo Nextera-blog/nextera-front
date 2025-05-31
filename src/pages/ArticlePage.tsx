@@ -1,12 +1,13 @@
 import { Link, useParams } from "react-router-dom";
 import { Article } from "../types/api";
-import { getArticleById } from "../services/articles";
+import { getArticleById, updateArticle } from "../services/articles";
 import useFetch from "../hooks/useFetch";
 import DataFetchingState from "../components/DataFetchingState";
 import CommentCard from "../components/CommentCard";
 import { capitalizeFirstLetter } from "../utils/utils";
 import { useAuth } from "../contexts/AuthContext";
 import { useEffect, useState } from "react";
+import { NotificationCard } from "../components/NotificationCard";
 
 export const ArticlePage: React.FunctionComponent = () => {
   const { id } = useParams();
@@ -17,8 +18,12 @@ export const ArticlePage: React.FunctionComponent = () => {
   } = useFetch<Article>(getArticleById, id);
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editedTitle, setEditedTitle] = useState<string>('');
-  const [editedContent, setEditedContent] = useState<string>('');
+  const [editedTitle, setEditedTitle] = useState<string>("");
+  const [editedContent, setEditedContent] = useState<string>("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string | null>(null);
+  const [modalError, setModalError] = useState<boolean>(false);
 
   const isAuthor = user && article?.author?.user === user.id;
 
@@ -27,26 +32,76 @@ export const ArticlePage: React.FunctionComponent = () => {
       setEditedTitle(article.title);
       setEditedContent(article.content);
     }
-  }, [article]);
+    if (openModal) {
+      const timer = setTimeout(() => {
+        setOpenModal(false);
+        setModalMessage(null);
+        setModalError(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [article, openModal]);
 
   const handleEditClick = () => {
     setIsEditing(true);
-  }
+  };
 
-  const handleSaveClick = () => {
-    console.log("Sauvegarde à faire"); // TO DO : logic to save
-    setIsEditing(false);
-  }
+  const handleSaveClick = async () => {
+    if (!article?.article_id) return;
+    setIsSaving(true);
+    setModalMessage(null);
+    setModalError(false);
+    setOpenModal(false);
 
-  if (article) {
-    console.log("Article : ", article);
-  }
+    console.log("ID de l'utilisateur connecté : ", user?.id);
 
-  console.log("user : ", user);
-  
+    try {
+      // const updatedArticle = await updateArticle(
+      //   article.article_id,
+      //   editedTitle,
+      //   editedContent
+      // );
+      await updateArticle(
+        article.article_id,
+        editedTitle,
+        editedContent,
+        user?.username,
+      );
+      setModalMessage("Article mis à jour avec succès !");
+      setModalError(false);
+      setOpenModal(true);
+      setIsEditing(false);
+      refetch();
+    } catch (err: any) {
+      console.error("Erreur lors de la mise à jour de l'article : ", err);
+      setModalMessage(
+        err.response?.data?.message ||
+          "Erreur lors de la mise à jour de l'article."
+      );
+      setModalError(true);
+      setOpenModal(true);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // if (article) {
+  //   console.log("Article : ", article);    
+  //   console.log("article.author : ", article.author);
+  // }
+
+  // console.log("user : ", user);
+
   return (
     <DataFetchingState loading={loading} error={error}>
-      <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">      
+      <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
+        {openModal && (
+          <NotificationCard
+            message={modalMessage}
+            error={modalError}
+            openModal={openModal}
+          />
+        )}
         {article ? (
           <>
             <section className="card grow m-6 overflow-y-auto-scroll flex flex-col md:w-4/5 article-section">
@@ -56,6 +111,7 @@ export const ArticlePage: React.FunctionComponent = () => {
                     type="text"
                     value={editedTitle}
                     onChange={(e) => setEditedTitle(e.target.value)}
+                    className="input-h1-title"
                   />
                 ) : (
                   article.title
@@ -63,47 +119,75 @@ export const ArticlePage: React.FunctionComponent = () => {
               </h1>
 
               {isAuthor && !isEditing && (
-                <button onClick={handleEditClick}>Modifier</button>
-              )}              
+                <div className="flex justify-center">
+                  <button onClick={handleEditClick} className="modify">
+                    Modifier
+                  </button>
+                </div>
+              )}
 
-              <p className="whitespace-pre-wrap py-8 mx-8 my-4 border-y-2 border-sky-600 grow">
+              {isAuthor && isEditing && (
+                <div className="flex justify-center">
+                  <button className="modify" disabled>
+                    Vous êtes en mode édition
+                  </button>
+                </div>
+              )}
+
+              <div className="py-8 mx-8 my-4 border-y-2 border-sky-600 grow">
                 {isEditing ? (
                   <textarea
                     value={editedContent}
                     onChange={(e) => setEditedContent(e.target.value)}
+                    className="whitespace-pre-wrap w-full h-full font-mono text-lg color-sky-950 bg-sky-200 border-none box-border"
+                    style={{ minHeight: "100px" }}
                   />
                 ) : (
-                  article.content
+                  <p className="whitespace-pre-wrap">{article.content}</p>
                 )}
-              </p>
+              </div>
 
               <p className="my-4 mr-8 text-end">
-                Publié le {new Date(article.creation_date).toLocaleDateString("fr-FR")} par{" "}
-                <Link to={`/authors/${article.author.user}`} className="hover:text-sky-600">
+                Publié le{" "}
+                {new Date(article.creation_date).toLocaleDateString("fr-FR")}{" "}
+                par{" "}
+                <Link
+                  to={`/authors/${article.author.user}`}
+                  className="hover:text-sky-600"
+                >
                   {article.author.name}
                 </Link>
               </p>
-              {article.update_date && article.update_date !== article.creation_date && (
-                <p>Modifié le {new Date(article.update_date).toLocaleDateString('fr-FR')}</p>
-              )}
+              {article.update_date &&
+                article.update_date !== article.creation_date && (
+                  <p>
+                    Modifié le{" "}
+                    {new Date(article.update_date).toLocaleDateString("fr-FR")}
+                  </p>
+                )}
 
               {article.tags && article.tags.length > 0 && (
                 <div>
-                  {/* <h2>Tags :</h2> */}
                   <div>
                     {article.tags.map((tag) => (
-                      <span key={tag.tag_id} className="tag">{capitalizeFirstLetter(tag.name)}</span>
+                      <span key={tag.tag_id} className="tag">
+                        {capitalizeFirstLetter(tag.name)}
+                      </span>
                     ))}
                   </div>
                 </div>
               )}
 
               {isEditing && (
-                <div className="mt-4">
-                  <button onClick={handleSaveClick} disabled={loading}>
-                    Sauvegarder
+                <div className="flex justify-center gap-4 mt-4">
+                  <button
+                    onClick={handleSaveClick}
+                    disabled={isSaving}
+                    className="save"
+                  >
+                    {isSaving ? "Sauvegarde..." : "Sauvegarder"}
                   </button>
-                  <button onClick={() => setIsEditing(false)}>
+                  <button onClick={() => setIsEditing(false)} className="abort">
                     Annuler
                   </button>
                 </div>
@@ -111,17 +195,19 @@ export const ArticlePage: React.FunctionComponent = () => {
             </section>
             <section className="card grow m-6 overflow-y-auto-scroll flex flex-col md:w-4/5 comments-section">
               {article.comments && article.comments.length > 0 && (
-              <>
-                <h2 className="mb-4">Commentaires</h2>
-                {article.comments.map(comment => (
-                  <CommentCard key={comment.comment_id} comment={comment} />
-                ))}
-              </>
-            )}
-             {!loading && article.comments && article.comments.length === 0 && (
-                <p>Pas encore de commentaires pour cet article.</p>
+                <>
+                  <h2 className="mb-4">Commentaires</h2>
+                  {article.comments.map((comment) => (
+                    <CommentCard key={comment.comment_id} comment={comment} />
+                  ))}
+                </>
               )}
-            </section>          
+              {!loading &&
+                article.comments &&
+                article.comments.length === 0 && (
+                  <p>Pas encore de commentaires pour cet article.</p>
+                )}
+            </section>
           </>
         ) : (
           !loading &&

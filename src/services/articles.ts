@@ -42,5 +42,18 @@ export const createArticle = async (
   }
 };
 
-// Other fonctions for the articles here (update, deletion...)
+export const updateArticle = async (
+  id: number,
+  title: string,
+  content: string,
+  userId: string | undefined
+): Promise<Article> => {
+  try {
+    const response = await axiosInstance.put<Article>(`/articles/update/${id}/`, { title, content, author: { user: userId } });
+    return response.data;
+  } catch (error: any) {
+    console.error(`Erreur lors de la mise à jour de l'article ${id} : `, error);
+    throw error;
+  }
+};
 
