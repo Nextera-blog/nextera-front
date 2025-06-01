@@ -15,6 +15,7 @@ export const ArticlePage: React.FunctionComponent = () => {
     loading,
     error,
     data: article,
+    refetch,
   } = useFetch<Article>(getArticleById, id);
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -26,6 +27,8 @@ export const ArticlePage: React.FunctionComponent = () => {
   const [modalError, setModalError] = useState<boolean>(false);
 
   const isAuthor = user && article?.author?.user === user.id;
+
+  // console.log("article dans ArticlePage : ", article);
 
   useEffect(() => {
     if (article) {
@@ -65,13 +68,19 @@ export const ArticlePage: React.FunctionComponent = () => {
         article.article_id,
         editedTitle,
         editedContent,
-        user?.username,
+        user?.id,
+        article.author.name,
+        article.author.bio,
+        article.author.profile_picture_url,
+        article.author.join_date,
+        article.tags.map(tag => tag.tag_id),
       );
       setModalMessage("Article mis à jour avec succès !");
       setModalError(false);
       setOpenModal(true);
       setIsEditing(false);
       refetch();
+      console.log("Article après refetch : ", article);
     } catch (err: any) {
       console.error("Erreur lors de la mise à jour de l'article : ", err);
       setModalMessage(
@@ -147,7 +156,7 @@ export const ArticlePage: React.FunctionComponent = () => {
                 )}
               </div>
 
-              <p className="my-4 mr-8 text-end">
+              <p className="mt-4 mb-2 mr-8 text-end">
                 Publié le{" "}
                 {new Date(article.creation_date).toLocaleDateString("fr-FR")}{" "}
                 par{" "}
@@ -160,7 +169,7 @@ export const ArticlePage: React.FunctionComponent = () => {
               </p>
               {article.update_date &&
                 article.update_date !== article.creation_date && (
-                  <p>
+                  <p className="mb-4 mr-8 text-end">
                     Modifié le{" "}
                     {new Date(article.update_date).toLocaleDateString("fr-FR")}
                   </p>
