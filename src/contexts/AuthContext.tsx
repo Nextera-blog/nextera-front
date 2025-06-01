@@ -43,10 +43,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const currentUserData = await getCurrentUser();
         setUser(currentUserData);
-        // console.log("currentUserData : ", currentUserData);
         setIsLoggedIn(true);
       } catch (error: any) {
-        console.error("Erreur lors de la récupéraiton de l'utilisateur courant : ", error);
+        console.error("Erreur lors de la récupération de l'utilisateur courant : ", error);
         logout();
       } finally {
         setIsLoadingAuth(false);
