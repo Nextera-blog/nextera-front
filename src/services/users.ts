@@ -21,7 +21,7 @@ export const updateProfile = async (userData: {
   email?: string;
   author?: {
     name?: string;
-    bio?: string;
+    bio?: string | null;
   };
 }, userId: number): Promise<CurrentUser> => {
   try {

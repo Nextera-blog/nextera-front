@@ -16,6 +16,9 @@ export const ProfilePage: React.FC = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string | null>(null);
   const [modalError, setModalError] = useState<boolean>(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [isCheckingEmail, setIsCheckingEmail] = useState<boolean>(false);
+  const canSave = !emailError;
 
   console.log("user : ", user);
 
@@ -33,12 +36,60 @@ export const ProfilePage: React.FC = () => {
     return <Navigate to="/login" />;
   }
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    setEmailError(null);
+  }
+
+  const checkEmailUniqueness = async () => {
+    if (email === user?.email) {
+      setEmailError(null);
+      return;
+    }
+    setIsCheckingEmail(true);
+    try {
+      const userData = {
+        id: user.id,
+        email: email,
+        username: username,
+        first_name: firstName,
+        last_name: lastName,
+        author: {
+          name: authorName,
+          bio: bio,
+        },
+      };
+      await updateProfile(userData, user.id);
+      setEmailError(null);
+    } catch (error: any) {
+      console.error("Erreur lors de la vérification de l'email : ", error);
+      console.error("Réponse détaillée du backend : ", error.response?.data);
+      if (error.response?.data?.error === "Email indisponible") {
+        setEmailError("Cet email est déjà utilisé.");
+      } else if (error.response?.data?.error === "Email invalide") {
+        setEmailError("Format d'email invalide.");
+      } else {
+        console.error("Erreur lors de la vérification de l'email : ", error);
+        setEmailError("Erreur lors de la vérification de l'email.");
+      }
+    } finally {
+      setIsCheckingEmail(false);
+    }
+  };
+
   const handleEditToggle = async () => {
     if (isEditing) {
       setModalError(false);
       setModalMessage(null);
       setOpenModal(false);
       try {
+        if (emailError) {
+          setModalMessage("Veuillez corriger l'erreur d'email.");
+          setModalError(true);
+          setOpenModal(true);
+          return;
+        }
+
         const userData = {
           id: user.id,
           username,
@@ -94,7 +145,7 @@ export const ProfilePage: React.FC = () => {
     <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
       <h1>Votre profil</h1>
 
-      <button onClick={handleEditToggle} className={isEditing ? "bg-sky-500 text-sky-50" : "bg-red-500 text-white"}>
+      <button onClick={handleEditToggle} className={isEditing ? (canSave ? "bg-sky-500 text-sky-50" : "bg-gray-400 text-gray-100 cursor-not-allowed") : "bg-red-500 text-white"} disabled={isEditing && (!canSave || isCheckingEmail)}>
         {isEditing
           ? "Sauvegarder"
           : "Editer"}
@@ -125,9 +176,12 @@ export const ProfilePage: React.FC = () => {
               name="email"
               id="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
+              onBlur={isEditing ? checkEmailUniqueness : undefined}
               readOnly={!isEditing}
             />
+            {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
+            {isCheckingEmail && <p className="text-gray-500 text-sm mt-1">Vérification de l'email...</p>}
           </div>
           <div className="flex flex-col">
             <label htmlFor="firstName">Prénom :</label>
