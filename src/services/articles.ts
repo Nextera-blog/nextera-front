@@ -1,5 +1,5 @@
 import axiosInstance from "../api/axiosInstance";
-import { Article } from "../types/api";
+import { Article, Tag } from "../types/api";
 
 export const getArticles = async (): Promise<Article[]> => {
   try {
@@ -73,3 +73,12 @@ export const updateArticle = async (
   }
 };
 
+export const getAllTags = async (): Promise<Tag[]> => {
+  try {
+    const response = await axiosInstance.get<Tag[]>("/tags/");
+    return response.data;
+  } catch (error: any) {
+    console.error("Erreur lors de la récupération de tous les tags : ", error);
+    throw error;
+  }
+};
