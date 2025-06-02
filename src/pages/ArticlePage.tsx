@@ -23,21 +23,17 @@ export const ArticlePage: React.FunctionComponent = () => {
   } = useFetch<Article>(getArticleById, id);
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  console.log("Valeur de isEditing : ", isEditing); // TESTING
   const [editedTitle, setEditedTitle] = useState<string>("");
   const [editedContent, setEditedContent] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string | null>(null);
   const [modalError, setModalError] = useState<boolean>(false);
-  const [forceRender, setForceRender] = useState(0); // TESTING
 
   const [allTags, setAllTags] = useState<Tag[]>([]);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
 
   const isAuthor = user && article?.author?.user === user.id;
-
-  // console.log("article dans ArticlePage : ", article);
 
   useEffect(() => {
     if (article) {
@@ -61,10 +57,6 @@ export const ArticlePage: React.FunctionComponent = () => {
       }
     };
 
-    console.log("isEditing : ", isEditing);
-
-    console.log("isEditing dans useEffect : ", isEditing);
-
     if (isEditing) {
       fetchAllTags();
     } else {
@@ -82,15 +74,10 @@ export const ArticlePage: React.FunctionComponent = () => {
   }, [article, openModal, isEditing]);
 
   const handleEditClick = () => {
-    console.log("handleEditClick a été appelé !");
-    // setIsEditing(true);
+    // functional form of the state update, becuse otherwise, changes are sometimes not saved
     setIsEditing((prevState) => {
-      console.log("prevState isEditing : ", prevState);
       return true;
     });
-    setForceRender((prev) => prev + 1); // TESTING
-    console.log("isEditing après clic : ", isEditing);
-    console.log("forceRender : ", forceRender);
   };
 
   const handleTagClick = (tagId: number) => {
@@ -108,14 +95,7 @@ export const ArticlePage: React.FunctionComponent = () => {
     setModalError(false);
     setOpenModal(false);
 
-    console.log("ID de l'utilisateur connecté : ", user?.id);
-
     try {
-      // const updatedArticle = await updateArticle(
-      //   article.article_id,
-      //   editedTitle,
-      //   editedContent
-      // );
       await updateArticle(
         article.article_id,
         editedTitle,
@@ -132,7 +112,6 @@ export const ArticlePage: React.FunctionComponent = () => {
       setOpenModal(true);
       setIsEditing(false);
       refetch();
-      // console.log("Article après refetch : ", article);
     } catch (err: any) {
       console.error("Erreur lors de la mise à jour de l'article : ", err);
       setModalMessage(
@@ -145,13 +124,6 @@ export const ArticlePage: React.FunctionComponent = () => {
       setIsSaving(false);
     }
   };
-
-  // if (article) {
-  //   console.log("Article : ", article);
-  //   console.log("article.author : ", article.author);
-  // }
-
-  // console.log("user : ", user);
 
   return (
     <DataFetchingState loading={loading} error={error}>
@@ -229,37 +201,6 @@ export const ArticlePage: React.FunctionComponent = () => {
                   </p>
                 )}
 
-              {/* {article.tags && article.tags.length > 0 && (
-                <div className="mb-4 ml-8">
-                  <div>
-                    {article.tags.map((tag) => (
-                      <span key={tag.tag_id} className="tag">
-                        {capitalizeFirstLetter(tag.name)}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {isEditing && allTags.length > 0 && (
-                <div className="mb-4 ml-8 ">
-                  <h3 className="mb-2">Modifier les tags</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {allTags.map((tag) => (
-                      <span
-                        key={tag.tag_id}
-                        className={`tag cursor-pointer ${
-                          selectedTagIds.includes(tag.tag_id) ? 'border-green-500 border-3' : 'border-gray-400 border-3'
-                        }`}
-                        onClick={() => handleTagClick(tag.tag_id)}
-                      >
-                        {capitalizeFirstLetter(tag.name)}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )} */}
-
               {isEditing && allTags.length > 0 && article?.tags && (
                 <div className="mb-4 ml-8">
                   {/* <h3>Modifier les tags</h3> */}
@@ -277,6 +218,9 @@ export const ArticlePage: React.FunctionComponent = () => {
                               : "border-gray-400 bg-gray-100"
                           } ${isInitiallySelected ? "font-extrabold" : ""}`}
                           onClick={() => handleTagClick(tag.tag_id)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => e.key === 'Enter' && handleTagClick(tag.tag_id)}
                         >
                           {capitalizeFirstLetter(tag.name)}
                         </span>
