@@ -8,57 +8,127 @@ import { capitalizeFirstLetter } from "../utils/utils";
 import { useAuth } from "../contexts/AuthContext";
 import { useState } from "react";
 import { NotificationCard } from "../components/NotificationCard";
+import { ArticleReactionResult, toggleArticleReaction } from "../services/reactions";
 
 export const ArticlePage: React.FunctionComponent = () => {
   const { id } = useParams();
   const {
     loading,
     error,
-    data: article,
+    data: initialArticle,
+    refetch,
   } = useFetch<Article>(getArticleById, id);
 
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
   const [notificationError, setNotificationError] = useState<boolean>(false);
+  const [localReactions, setLocalReactions] = useState<Reaction[] | undefined>(
+    initialArticle?.article_reactions
+  );
+
+  console.log("useAuth() : ", useAuth());
+  console.log("initialArticle : ", initialArticle);
 
   // if (article) {
   //   console.log("Article : ", article);
   //   console.log("article?.article_reactions : ", article?.article_reactions);
   // }
 
-  const handleReactionClick = (reactionId: number) => {
-    if (isLoggedIn) {
-      console.log(`Emoji ${reactionId} cliqué !`); // TO DO : handle API to add/delete the reaction
+  const updateLocalReactions = (
+    reactionTypeId: number,
+    operation: "increment" | "decrement"
+  ) => {
+    if (localReactions) {
+      setLocalReactions((prevReactions) =>
+        prevReactions?.map((reaction) =>
+          reaction.reaction_type_id === reactionTypeId
+            ? {
+                ...reaction,
+                counter:
+                  operation === "increment"
+                    ? reaction.counter + 1
+                    : Math.max(0, reaction.counter - 1),
+              }
+            : reaction
+        )
+      );
+    }
+  };
+
+  const handleReactionClick = async (reactionId: number) => {
+    if (isLoggedIn && initialArticle && user?.id) {
+      // console.log(`Emoji ${reactionId} cliqué !`);
+      try {
+        const response: ArticleReactionResult = await toggleArticleReaction(
+          reactionId,
+          user.id,
+          initialArticle.article_id,
+        );
+        console.log("Réponse de la réaction :", response);
+
+        if (
+          "message" in response &&
+          response.message === "Réaction supprimée avec succès"
+        ) {
+          updateLocalReactions(reactionId, "decrement");
+        } else if ("reaction_type" in response) {
+          const hasReactedBefore = localReactions?.some(
+            (r) => r.reaction_type_id === reactionId
+          );
+          updateLocalReactions(
+            reactionId,
+            hasReactedBefore ? "increment" : "increment"
+          );
+        }
+
+        refetch();
+      } catch (error: any) {
+        console.error("Erreur lors de la réaction :", error.message);
+        setMessage("Erreur lors de la réaction.");
+        setNotificationError(true);
+        setOpenModal(true);
+        setTimeout(() => {
+          setOpenModal(false);
+          setMessage(null);
+          setNotificationError(false);
+        }, 4000);
+      }
     } else {
       setOpenModal(true);
       setMessage("Connectez-vous pour laisser une réaction.");
       setNotificationError(false);
-      console.log("Connectez-vous pour laisser une réaction.");
-        setTimeout(() => {
-          setOpenModal(false);
-          setMessage(null);
-        }, 4000);
+      // console.log("Connectez-vous pour laisser une réaction.");
+      setTimeout(() => {
+        setOpenModal(false);
+        setMessage(null);
+      }, 4000);
     }
   };
 
   return (
     <DataFetchingState loading={loading} error={error}>
       <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
-        {openModal && <NotificationCard message={message} error={notificationError} openModal={openModal} />}
+        {openModal && (
+          <NotificationCard
+            message={message}
+            error={notificationError}
+            openModal={openModal}
+          />
+        )}
 
-        {article ? (
+        {initialArticle ? (
           <>
             <section className="card grow m-6 overflow-y-auto-scroll flex flex-col md:w-4/5 article-section">
-              <h1 className="card-title">{article.title}</h1>
+              <h1 className="card-title">{initialArticle.title}</h1>
               <p className="whitespace-pre-wrap py-8 mx-8 my-4 border-y-2 border-sky-600 grow">
-                {article.content}
+                {initialArticle.content}
               </p>
 
               <div className="flex justify-between items-center mx-8 mb-4">
                 <div className="flex ml-0">
-                  {article?.article_reactions &&
-                    article?.article_reactions.map((reaction) => (
+                  {initialArticle?.article_reactions &&
+                    initialArticle.article_reactions.map((reaction) => (
                       <div
                         className="flex flex-col items-center justify-center mr-4 cursor-pointer"
                         key={reaction.reaction_type_id}
@@ -66,7 +136,9 @@ export const ArticlePage: React.FunctionComponent = () => {
                           handleReactionClick(reaction.reaction_type_id)
                         }
                       >
-                        <div className="mt-3 text-lg transition-transform duration-200 hover:scale-200 origin-center">{reaction.emoji}</div>
+                        <div className="mt-3 text-lg transition-transform duration-200 hover:scale-200 origin-center">
+                          {reaction.emoji}
+                        </div>
                         <div
                           className={`text-sm ${
                             reaction.counter === 0 ? "text-sky-200" : ""
@@ -79,21 +151,23 @@ export const ArticlePage: React.FunctionComponent = () => {
                 </div>
                 <p className="my-4 text-right">
                   Publié le{" "}
-                  {new Date(article.creation_date).toLocaleDateString("fr-FR")}{" "}
+                  {new Date(initialArticle.creation_date).toLocaleDateString(
+                    "fr-FR"
+                  )}{" "}
                   par{" "}
                   <Link
-                    to={`/authors/${article.author.user}`}
+                    to={`/authors/${initialArticle.author.user}`}
                     className="hover:text-sky-600"
                   >
-                    {article.author.name}
+                    {initialArticle.author.name}
                   </Link>
                 </p>
               </div>
 
-              {article.tags && article.tags.length > 0 && (
+              {initialArticle.tags && initialArticle.tags.length > 0 && (
                 <div className="mx-8 mb-4">
                   <div>
-                    {article.tags.map((tag) => (
+                    {initialArticle.tags.map((tag) => (
                       <span key={tag.tag_id} className="tag">
                         {capitalizeFirstLetter(tag.name)}
                       </span>
@@ -103,17 +177,18 @@ export const ArticlePage: React.FunctionComponent = () => {
               )}
             </section>
             <section className="card grow m-6 overflow-y-auto-scroll flex flex-col md:w-4/5 comments-section">
-              {article.comments && article.comments.length > 0 && (
-                <>
-                  <h2 className="mb-4">Commentaires</h2>
-                  {article.comments.map((comment) => (
-                    <CommentCard key={comment.comment_id} comment={comment} />
-                  ))}
-                </>
-              )}
+              {initialArticle.comments &&
+                initialArticle.comments.length > 0 && (
+                  <>
+                    <h2 className="mb-4">Commentaires</h2>
+                    {initialArticle.comments.map((comment) => (
+                      <CommentCard key={comment.comment_id} comment={comment} />
+                    ))}
+                  </>
+                )}
               {!loading &&
-                article.comments &&
-                article.comments.length === 0 && (
+                initialArticle.comments &&
+                initialArticle.comments.length === 0 && (
                   <p>Pas encore de commentaires pour cet article.</p>
                 )}
             </section>
