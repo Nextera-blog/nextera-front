@@ -6,7 +6,7 @@ import DataFetchingState from "../components/DataFetchingState";
 import CommentCard from "../components/CommentCard";
 import { capitalizeFirstLetter } from "../utils/utils";
 import { useAuth } from "../contexts/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NotificationCard } from "../components/NotificationCard";
 import { ArticleReactionResult, toggleArticleReaction } from "../services/reactions";
 
@@ -35,6 +35,10 @@ export const ArticlePage: React.FunctionComponent = () => {
   //   console.log("article?.article_reactions : ", article?.article_reactions);
   // }
 
+  useEffect(() => {
+    setLocalReactions(initialArticle?.article_reactions);
+  }, [initialArticle]);
+
   const updateLocalReactions = (
     reactionTypeId: number,
     operation: "increment" | "decrement"
@@ -57,6 +61,18 @@ export const ArticlePage: React.FunctionComponent = () => {
   };
 
   const handleReactionClick = async (reactionId: number) => {
+    if (user && initialArticle && user.id === initialArticle.author.user) {
+      setMessage("Vous ne pouvez pas réagir à votre propre article.");
+      setNotificationError(true);
+      setOpenModal(true);
+      setTimeout(() => {
+        setOpenModal(false);
+        setMessage(null);
+        setNotificationError(false);
+      }, 4000);
+      return;
+    }
+
     if (isLoggedIn && initialArticle && user?.id) {
       // console.log(`Emoji ${reactionId} cliqué !`);
       try {
@@ -106,6 +122,11 @@ export const ArticlePage: React.FunctionComponent = () => {
     }
   };
 
+  const isAuthor = user && initialArticle && user.id === initialArticle.author.user;
+
+  console.log("user?.id : ", user?.id);
+  console.log("initialArticle?.author.user : ", initialArticle?.author.user);
+
   return (
     <DataFetchingState loading={loading} error={error}>
       <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
@@ -130,11 +151,9 @@ export const ArticlePage: React.FunctionComponent = () => {
                   {initialArticle?.article_reactions &&
                     initialArticle.article_reactions.map((reaction) => (
                       <div
-                        className="flex flex-col items-center justify-center mr-4 cursor-pointer"
+                        className={`flex flex-col items-center justify-center mr-4 ${isAuthor ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                         key={reaction.reaction_type_id}
-                        onClick={() =>
-                          handleReactionClick(reaction.reaction_type_id)
-                        }
+                        onClick={() => !isAuthor && handleReactionClick(reaction.reaction_type_id)}
                       >
                         <div className="mt-3 text-lg transition-transform duration-200 hover:scale-200 origin-center">
                           {reaction.emoji}
