@@ -16,16 +16,15 @@ export const ArticlePage: React.FunctionComponent = () => {
     loading,
     error,
     data: initialArticle,
-    refetch,
+    // refetch,
   } = useFetch<Article>(getArticleById, id);
 
   const { isLoggedIn, user } = useAuth();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
   const [notificationError, setNotificationError] = useState<boolean>(false);
-  const [localReactions, setLocalReactions] = useState<Reaction[] | undefined>(
-    initialArticle?.article_reactions
-  );
+  const [localReactions, setLocalReactions] = useState<Reaction[]>([]);
+  const [activeUserReaction, setActiveUserReaction] = useState<number | null>(null);
 
   console.log("useAuth() : ", useAuth());
   console.log("initialArticle : ", initialArticle);
@@ -36,32 +35,51 @@ export const ArticlePage: React.FunctionComponent = () => {
   // }
 
   useEffect(() => {
-    setLocalReactions(initialArticle?.article_reactions);
+    if (initialArticle?.article_reactions) {
+      setLocalReactions(initialArticle.article_reactions.map(r => ({ ...r })));
+    }
   }, [initialArticle]);
 
-  const updateLocalReactions = (
-    reactionTypeId: number,
-    operation: "increment" | "decrement"
+  const updateLocalReactionsCounters = (
+    oldReactionTypeId: number | null,
+    newReactionTypeId: number | null
   ) => {
-    if (localReactions) {
-      setLocalReactions((prevReactions) =>
-        prevReactions?.map((reaction) =>
-          reaction.reaction_type_id === reactionTypeId
-            ? {
-                ...reaction,
-                counter:
-                  operation === "increment"
-                    ? reaction.counter + 1
-                    : Math.max(0, reaction.counter - 1),
-              }
-            : reaction
-        )
-      );
-    }
+    setLocalReactions(prevReactions => {
+      const updatedReactions = [...prevReactions];
+
+      if (oldReactionTypeId !== null) {
+        const oldReactionIndex = updatedReactions.findIndex(r => r.reaction_type_id === oldReactionTypeId);
+        if (oldReactionIndex > -1) {
+          updatedReactions[oldReactionIndex] = {
+            ...updatedReactions[oldReactionIndex],
+            counter: Math.max(0, updatedReactions[oldReactionIndex].counter - 1)
+          };
+        }
+      }
+
+      if (newReactionTypeId !== null) {
+        const newReactionIndex = updatedReactions.findIndex(r => r.reaction_type_id === newReactionTypeId);
+        if (newReactionIndex > -1) {
+          updatedReactions[newReactionIndex] = {
+            ...updatedReactions[newReactionIndex],
+            counter: updatedReactions[newReactionIndex].counter + 1
+          };
+        } else if (initialArticle) {
+          const baseReaction = initialArticle.article_reactions?.find(r => r.reaction_type_id === newReactionTypeId);
+          if (baseReaction) {
+            const tempReactions = [...updatedReactions, { ...baseReaction, counter: 1 }];
+            tempReactions.sort((a, b) => a.reaction_type_id - b.reaction_type_id);
+            return tempReactions;
+          }
+        }
+      }
+      return updatedReactions;
+    });
   };
 
-  const handleReactionClick = async (reactionId: number) => {
-    if (user && initialArticle && user.id === initialArticle.author.user) {
+  const handleReactionClick = async (clickedReactionTypeId: number) => {
+    const isAuthor = user && initialArticle && user.id === initialArticle.author.user;
+    if (isAuthor) {
       setMessage("Vous ne pouvez pas réagir à votre propre article.");
       setNotificationError(true);
       setOpenModal(true);
@@ -73,51 +91,58 @@ export const ArticlePage: React.FunctionComponent = () => {
       return;
     }
 
-    if (isLoggedIn && initialArticle && user?.id) {
-      // console.log(`Emoji ${reactionId} cliqué !`);
-      try {
-        const response: ArticleReactionResult = await toggleArticleReaction(
-          reactionId,
-          user.id,
-          initialArticle.article_id,
-        );
-        console.log("Réponse de la réaction :", response);
-
-        if (
-          "message" in response &&
-          response.message === "Réaction supprimée avec succès"
-        ) {
-          updateLocalReactions(reactionId, "decrement");
-        } else if ("reaction_type" in response) {
-          const hasReactedBefore = localReactions?.some(
-            (r) => r.reaction_type_id === reactionId
-          );
-          updateLocalReactions(
-            reactionId,
-            hasReactedBefore ? "increment" : "increment"
-          );
-        }
-
-        refetch();
-      } catch (error: any) {
-        console.error("Erreur lors de la réaction :", error.message);
-        setMessage("Erreur lors de la réaction.");
-        setNotificationError(true);
-        setOpenModal(true);
-        setTimeout(() => {
-          setOpenModal(false);
-          setMessage(null);
-          setNotificationError(false);
-        }, 4000);
-      }
-    } else {
+    if (!isLoggedIn || !initialArticle || !user?.id) {
       setOpenModal(true);
       setMessage("Connectez-vous pour laisser une réaction.");
       setNotificationError(false);
-      // console.log("Connectez-vous pour laisser une réaction.");
       setTimeout(() => {
         setOpenModal(false);
         setMessage(null);
+      }, 4000);
+      return;
+    }
+
+    // Save previous state for possible cancellation
+    const prevLocalReactions = localReactions;
+    const prevActiveUserReaction = activeUserReaction;
+
+    let newActiveUserReaction: number | null;
+    let reactionToApi: number | null;
+
+    if (clickedReactionTypeId === activeUserReaction) {
+      newActiveUserReaction = null;
+      reactionToApi = clickedReactionTypeId;
+      updateLocalReactionsCounters(activeUserReaction, null);
+    } else {
+      newActiveUserReaction = clickedReactionTypeId;
+      reactionToApi = clickedReactionTypeId;
+      updateLocalReactionsCounters(activeUserReaction, clickedReactionTypeId);
+    }
+
+    setActiveUserReaction(newActiveUserReaction);
+
+    try {
+      const response: ArticleReactionResult = await toggleArticleReaction(
+        clickedReactionTypeId,
+        user.id,
+        initialArticle.article_id,
+      );
+
+      console.log("Réponse de la réaction :", response);
+
+    } catch (error: any) {
+      console.error("Erreur lors de la réaction :", error.message);
+      // In case of error, cancel optimistic updates
+      setLocalReactions(prevLocalReactions);
+      setActiveUserReaction(prevActiveUserReaction);
+
+      setMessage("Erreur lors de la réaction.");
+      setNotificationError(true);
+      setOpenModal(true);
+      setTimeout(() => {
+        setOpenModal(false);
+        setMessage(null);
+        setNotificationError(false);
       }, 4000);
     }
   };
@@ -148,10 +173,12 @@ export const ArticlePage: React.FunctionComponent = () => {
 
               <div className="flex justify-between items-center mx-8 mb-4">
                 <div className="flex ml-0">
-                  {initialArticle?.article_reactions &&
-                    initialArticle.article_reactions.map((reaction) => (
+                  {localReactions &&
+                    localReactions.map((reaction) => (
                       <div
-                        className={`flex flex-col items-center justify-center mr-4 ${isAuthor ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`flex flex-col items-center justify-center mr-4 
+                                    ${isAuthor ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
+                                    ${activeUserReaction === reaction.reaction_type_id ? 'text-sky-500' : 'text-sky-950'}`}
                         key={reaction.reaction_type_id}
                         onClick={() => !isAuthor && handleReactionClick(reaction.reaction_type_id)}
                       >
