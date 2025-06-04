@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Author, Tag } from "../types/api";
+import { Author, Reaction, Tag } from "../types/api";
 import { capitalizeFirstLetter } from "../utils/utils";
 
 export type PostCardType = {
@@ -7,21 +7,21 @@ export type PostCardType = {
   title: string;
   content: string;
   creationDate: string;
-  // author: {
-  //   // author_id: number;
-  //   user: number; // See if we choose 'user' or 'author_id'
-  //   bio: string | null;
-  //   join_date: string;
-  //   // username: string;
-  //   profile_picture_url: string | null;
-  //   name?: string;
-  // }
   author: Author;
   tags: Tag[];
+  article_reactions?: Reaction[];
 };
 
 export const ArticleCard = (props: PostCardType) => {
-  const { articleId, title, content, author, creationDate, tags } = props;
+  const {
+    articleId,
+    title,
+    content,
+    author,
+    creationDate,
+    tags,
+    article_reactions,
+  } = props;
   const date = new Date(creationDate).toLocaleDateString("fr-FR");
   const url = `/articles/${articleId}`;
 
@@ -45,9 +45,28 @@ export const ArticleCard = (props: PostCardType) => {
         , {date}
       </h4>
 
-      <Link to={url}>
-        <button className="my-3 px-3 py-1 text-xl">+</button>
-      </Link>
+      <div className="flex justify-between items-center">
+        <Link to={url}>
+          <button className="my-3 px-3 py-1 text-xl">+</button>
+        </Link>
+
+        <div className="flex ml-4">
+          {article_reactions &&
+            article_reactions.map((reaction) => (
+              <div
+                key={reaction.reaction_type_id}
+                className="flex flex-col items-center justify-center"
+              >
+                {reaction.counter > 0 && (
+                  <>
+                    <div className="mt-3 text-lg">{reaction.emoji}</div>
+                    <div className="-mt-2 text-sm">{reaction.counter}</div>
+                  </>
+                )}
+              </div>
+            ))}
+        </div>
+      </div>
 
       {tags && tags.length > 0 && (
         <div>

@@ -35,6 +35,7 @@ export type Article = {
   author: Author;
   tags: Tag[];
   comments: Comment[];
+  article_reactions?: Reaction[];
 }
 
 export type ArticleMinimal = {
@@ -64,3 +65,14 @@ export type CurrentUser = {
     role_name: string;
   } | null;
 }
+
+export type Reaction = {
+  reaction_type_id: number;
+  emoji: string;
+  description: string;
+  counter: number;
+}
+
+// export type ArticleWithReactions = Article & {
+//   article_reactions?: Reaction[]; // TO SEE : maybe just adding this line to Article type ?
+// }
