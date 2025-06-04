@@ -1,5 +1,5 @@
 import axiosInstance from "../api/axiosInstance";
-import { Article } from "../types/api";
+import { Article, Tag } from "../types/api";
 
 export const getArticles = async (): Promise<Article[]> => {
   try {
@@ -42,5 +42,43 @@ export const createArticle = async (
   }
 };
 
-// Other fonctions for the articles here (update, deletion...)
+export const updateArticle = async (
+  id: number,
+  title: string,
+  content: string,
+  userId: number | undefined,
+  authorName: string | undefined,
+  authorBio: string | null | undefined,
+  authorProfilePictureUrl: string | null | undefined,
+  authorJoinDate: string | undefined,
+  tags: number[],
+): Promise<Article> => {
+  try {
+    const response = await axiosInstance.put<Article>(`/articles/update/${id}/`, { 
+      title, 
+      content, 
+      author: { 
+        user: userId,
+        name: authorName,
+        bio: authorBio,
+        profile_picture_url: authorProfilePictureUrl,
+        join_date: authorJoinDate,
+     },
+     tags: tags,
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error(`Erreur lors de la mise à jour de l'article ${id} : `, error);
+    throw error;
+  }
+};
 
+export const getAllTags = async (): Promise<Tag[]> => {
+  try {
+    const response = await axiosInstance.get<Tag[]>("/tags/");
+    return response.data;
+  } catch (error: any) {
+    console.error("Erreur lors de la récupération de tous les tags : ", error);
+    throw error;
+  }
+};
