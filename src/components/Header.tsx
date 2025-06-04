@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext";
 
 interface HeaderProps {
@@ -35,6 +35,7 @@ export const Header: React.FC<HeaderProps> = ({
         <img src="/nextera-logo.png" alt="Logo Nextera" className="w-10 mr-2" />
         <p className="hidden md:inline md:text-xl">Nextera blog</p>
       </div>
+      
       <nav className="justify-self-center flex items-center">
         <NavLink to="/" className="nav-link">
           Accueil
@@ -45,12 +46,12 @@ export const Header: React.FC<HeaderProps> = ({
           </NavLink>
         )}
       </nav>
+      
       <div className="justify-self-end flex items-center">
-        <button
-          type="button"
-          onClick={handleAuthButtonClick}
-          className="nextera-button"
-        >
+        {isLoggedIn && (
+          <Link to="/profile" className="mr-8 hover:underline hover:underline-offset-3 hover:font-bold">{user?.username}</Link>
+        )}      
+        <button type="button" onClick={handleAuthButtonClick} className="nextera-button">
           {isLoggedIn ? "Se déconnecter" : "Se connecter"}
         </button>
         <button onClick={onToggleDarkMode} className="mx-8">

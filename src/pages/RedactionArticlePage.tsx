@@ -8,8 +8,8 @@ import { useAuth } from "../contexts/AuthContext";
 export const RedactionArticlePage: React.FunctionComponent = () => {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string | null>(null); // renaming to have the same thing as in ProfilePage
+  const [modalError, setModalError] = useState<boolean>(false); // renaming to have the same thing as in ProfilePage
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { user } = useAuth();
   const userId = user?.id;
@@ -23,8 +23,8 @@ export const RedactionArticlePage: React.FunctionComponent = () => {
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setMessage(null);
-    setError(false);
+    setModalMessage(null);
+    setModalError(false);
 
     // get form data values
     const form = e.currentTarget;
@@ -47,22 +47,22 @@ export const RedactionArticlePage: React.FunctionComponent = () => {
     try {
       if (userId) {
         await createArticle(title, content, userId);
-        setMessage("Article créé avec succès !");
-        setError(false);
+        setModalMessage("Article créé avec succès !");
+        setModalError(false);
         setOpenModal(true);
         setTimeout(() => {
           setOpenModal(false);
           navigate('/');
         }, 3000);
       } else {
-        setMessage("Vous devez être connecté pour créer un article.");
-        setError(true);
+        setModalMessage("Vous devez être connecté pour créer un article.");
+        setModalError(true);
         setOpenModal(true);
       }
     } catch (err: any) {
       console.error("Erreur lors de la création de l'article : ", err);
-      setMessage(err.response?.data?.message || err.message || "Erreur lors de la création de l'article.");
-      setError(true);
+      setModalMessage(err.response?.data?.message || err.message || "Erreur lors de la création de l'article.");
+      setModalError(true);
       setOpenModal(true);
     } finally {
       setIsSubmitting(false);
@@ -72,7 +72,7 @@ export const RedactionArticlePage: React.FunctionComponent = () => {
   return (
     <main className="grow flex flex-col items-center h-5/6 overflow-hidden pb-6 relative">
       <h1>Rédiger un article</h1>
-      {openModal && <NotificationCard message={message} error={error} openModal={openModal} />}
+      {openModal && <NotificationCard message={modalMessage} error={modalError} openModal={openModal} />}
 
       <section className="card w-5/6 grow p-4 h-full md:mt-2 md:w-1/2 flex flex-col">
         <h2 className="text-center mb-4 md:my-2">Nouvel article</h2>
@@ -86,7 +86,7 @@ export const RedactionArticlePage: React.FunctionComponent = () => {
           <input type="text" name="title" id="title" className="md:p-3" required />
 
           <label htmlFor="content">Contenu de l'article</label>
-          <textarea name="content" id="content" className="grow overflow-y-scroll"></textarea>
+          <textarea name="content" id="content" className="grow overflow-y"></textarea>
 
           {/* <button type="submit" className="self-center mt-2">Valider</button> */}
 

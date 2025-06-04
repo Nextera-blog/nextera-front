@@ -395,7 +395,7 @@ export const ArticlePage: React.FunctionComponent = () => {
                 </div>
               )}
             </section>
-            <section className="card grow m-6 overflow-y-auto-scroll flex flex-col md:w-4/5 comments-section">
+            <section className="card grow m-6 overflow-y-auto flex flex-col md:w-4/5 comments-section">
               {article.comments && article.comments.length > 0 && (
                 <>
                   <h2 className="mb-4">Commentaires</h2>
