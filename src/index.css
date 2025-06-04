@@ -170,7 +170,7 @@
     padding: 2px;
     margin-right: 2px;
   }
-  
+
   .link {
     text-decoration-line: underline;
     text-underline-position: under;
@@ -180,14 +180,15 @@
     color: var(--color-sky-600);
     font-weight: 700;
 
-  .article-section {
-    flex-basis: 50%; /* Initial size on large screens */
-    min-width: 300px;
-  }
+    .article-section {
+      flex-basis: 50%; /* Initial size on large screens */
+      min-width: 300px;
+    }
 
-  .comments-section {
-    flex-basis: 50%; /* Initial size on large screens */
-    min-width: 300px;
+    .comments-section {
+      flex-basis: 50%; /* Initial size on large screens */
+      min-width: 300px;
+    }
   }
 }
 

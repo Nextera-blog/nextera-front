@@ -2,8 +2,8 @@ import { Link, NavLink, useNavigate } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext";
 
 interface HeaderProps {
-  onToggleDarkMode: () => void;
-  darkMode: boolean;
+  onToggleDarkMode?: () => void;
+  darkMode?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -30,7 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="w-full grid grid-cols-3 border-b-1 py-2 px-2 items-center">
+    <header className="w-full grid grid-cols-3 border-b border-sky-600 py-2 px-2 items-center">
       <div className="justify-self-start flex items-center">
         <img src="/nextera-logo.png" alt="Logo Nextera" className="w-10 mr-2" />
         <p className="hidden md:inline md:text-xl">Nextera blog</p>
@@ -54,9 +54,11 @@ export const Header: React.FC<HeaderProps> = ({
         <button type="button" onClick={handleAuthButtonClick} className="nextera-button">
           {isLoggedIn ? "Se déconnecter" : "Se connecter"}
         </button>
-        <button onClick={onToggleDarkMode} className="mx-8">
-          {darkMode ? "Mode Clair" : "Mode Sombre"}
-        </button>
+        {onToggleDarkMode && (
+          <button onClick={onToggleDarkMode} className="mx-8">
+            {darkMode ? "Mode Clair" : "Mode Sombre"}
+          </button>
+        )}
       </div>
     </header>
   );

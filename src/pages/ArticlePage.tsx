@@ -222,7 +222,7 @@ export const ArticlePage: React.FunctionComponent = () => {
       console.log("Réponse de la réaction :", response);
 
     } catch (err: any) {
-      console.error("Erreur lors de la réaction :", error.message);
+      console.error("Erreur lors de la réaction :", err.message);
       // In case of error, cancel optimistic updates
       setLocalReactions(prevLocalReactions);
       setActiveUserReaction(prevActiveUserReaction);

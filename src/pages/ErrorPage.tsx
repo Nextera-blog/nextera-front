@@ -5,7 +5,7 @@ export const ErrorPage = () => {
   return (
     <div className="w-full h-full bg-sky-950 text-sky-50 flex flex-col">
       <Header />
-      <main className="p-4 flex flex-col items-center h-full overflow-hidden">
+      <main className="p-4 flex flex-col items-center grow h-full overflow-hidden">
         <h1>Erreur 404</h1>
         <div className="flex flex-col justify-center items-center h-1/2">
           <p>Une erreur est survenue...</p>
