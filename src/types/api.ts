@@ -17,7 +17,15 @@ export type Comment = {
   user: Author;
   article: number, // TO SEE : not article_id ?
   parent_comment: number | null;
+  comment_reactions: Reaction[]; // Not implemented
   comment_replies: Comment[];
+}
+
+export interface PaginatedComments {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Comment[];
 }
 
 export type Tag = {
@@ -34,7 +42,8 @@ export type Article = {
   // author_id: number;
   author: Author;
   tags: Tag[];
-  comments: Comment[];
+  // comments: Comment[];
+  comments: PaginatedComments;
   article_reactions?: Reaction[];
 }
 

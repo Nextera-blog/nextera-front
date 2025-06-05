@@ -9,16 +9,18 @@ import { useAuth } from "../contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { NotificationCard } from "../components/NotificationCard";
 import { ArticleReactionResult, toggleArticleReaction } from "../services/reactions";
+import ReactPaginate from "react-paginate";
 
 export const ArticlePage: React.FunctionComponent = () => {
   const { id } = useParams();
+  const [currentCommentPage, setCurrentCommentPage] = useState(1);
   const {
     loading,
     error,
     data: article,
     refetch,
-  } = useFetch<Article>(getArticleById, id);
-  
+  } = useFetch<Article>(getArticleById, id, currentCommentPage);
+
   const { isLoggedIn, user } = useAuth();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editedTitle, setEditedTitle] = useState<string>("");
@@ -26,10 +28,12 @@ export const ArticlePage: React.FunctionComponent = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [allTags, setAllTags] = useState<Tag[]>([]);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
-    
+
   const [localReactions, setLocalReactions] = useState<Reaction[]>([]);
-  const [activeUserReaction, setActiveUserReaction] = useState<number | null>(null);
-    
+  const [activeUserReaction, setActiveUserReaction] = useState<number | null>(
+    null
+  );
+
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string | null>(null);
   const [modalError, setModalError] = useState<boolean>(false);
@@ -41,9 +45,9 @@ export const ArticlePage: React.FunctionComponent = () => {
       setEditedTitle(article.title);
       setEditedContent(article.content);
       setSelectedTagIds(article.tags.map((tag) => tag.tag_id));
-      
+
       if (article.article_reactions) {
-        setLocalReactions(article.article_reactions.map(r => ({ ...r })));
+        setLocalReactions(article.article_reactions.map((r) => ({ ...r })));
       }
     }
 
@@ -78,6 +82,15 @@ export const ArticlePage: React.FunctionComponent = () => {
     }
   }, [article, openModal, isEditing]);
 
+  const comments = article?.comments?.results || [];
+  const commentPageCount = article?.comments
+    ? Math.ceil(article.comments.count / 5)
+    : 0; // 5 comments per page (cf. backend)
+
+  const handleCommentPageClick = (event: { selected: number }) => {
+    setCurrentCommentPage(event.selected + 1); // react-paginate uses a base index of 0, the API a base index of 1
+  };
+
   const handleEditClick = () => {
     // functional form of the state update, becuse otherwise, changes are sometimes not saved
     setIsEditing((prevState) => {
@@ -90,7 +103,7 @@ export const ArticlePage: React.FunctionComponent = () => {
       if (prevSelectedTagIds.includes(tagId)) {
         return prevSelectedTagIds.filter((id) => id !== tagId);
       } else {
-        return [...selectedTagIds, tagId];
+        return [...prevSelectedTagIds, tagId];
       }
     });
   };
@@ -136,31 +149,45 @@ export const ArticlePage: React.FunctionComponent = () => {
     oldReactionTypeId: number | null,
     newReactionTypeId: number | null
   ) => {
-    setLocalReactions(prevReactions => {
+    setLocalReactions((prevReactions) => {
       const updatedReactions = [...prevReactions];
 
       if (oldReactionTypeId !== null) {
-        const oldReactionIndex = updatedReactions.findIndex(r => r.reaction_type_id === oldReactionTypeId);
+        const oldReactionIndex = updatedReactions.findIndex(
+          (r) => r.reaction_type_id === oldReactionTypeId
+        );
         if (oldReactionIndex > -1) {
           updatedReactions[oldReactionIndex] = {
             ...updatedReactions[oldReactionIndex],
-            counter: Math.max(0, updatedReactions[oldReactionIndex].counter - 1)
+            counter: Math.max(
+              0,
+              updatedReactions[oldReactionIndex].counter - 1
+            ),
           };
         }
       }
 
       if (newReactionTypeId !== null) {
-        const newReactionIndex = updatedReactions.findIndex(r => r.reaction_type_id === newReactionTypeId);
+        const newReactionIndex = updatedReactions.findIndex(
+          (r) => r.reaction_type_id === newReactionTypeId
+        );
         if (newReactionIndex > -1) {
           updatedReactions[newReactionIndex] = {
             ...updatedReactions[newReactionIndex],
-            counter: updatedReactions[newReactionIndex].counter + 1
+            counter: updatedReactions[newReactionIndex].counter + 1,
           };
         } else if (article) {
-          const baseReaction = article.article_reactions?.find(r => r.reaction_type_id === newReactionTypeId);
+          const baseReaction = article.article_reactions?.find(
+            (r) => r.reaction_type_id === newReactionTypeId
+          );
           if (baseReaction) {
-            const tempReactions = [...updatedReactions, { ...baseReaction, counter: 1 }];
-            tempReactions.sort((a, b) => a.reaction_type_id - b.reaction_type_id);
+            const tempReactions = [
+              ...updatedReactions,
+              { ...baseReaction, counter: 1 },
+            ];
+            tempReactions.sort(
+              (a, b) => a.reaction_type_id - b.reaction_type_id
+            );
             return tempReactions;
           }
         }
@@ -174,11 +201,11 @@ export const ArticlePage: React.FunctionComponent = () => {
       setModalMessage("Vous ne pouvez pas réagir à votre propre article.");
       setModalError(true);
       setOpenModal(true);
-//       setTimeout(() => {
-//         setOpenModal(false);
-//         setModalMessage(null);
-//         setModalError(false);
-//       }, 4000);
+      //       setTimeout(() => {
+      //         setOpenModal(false);
+      //         setModalMessage(null);
+      //         setModalError(false);
+      //       }, 4000);
       return;
     }
 
@@ -186,10 +213,10 @@ export const ArticlePage: React.FunctionComponent = () => {
       setOpenModal(true);
       setModalMessage("Connectez-vous pour laisser une réaction.");
       setModalError(false);
-//       setTimeout(() => {
-//         setOpenModal(false);
-//         setModalMessage(null);
-//       }, 4000);
+      //       setTimeout(() => {
+      //         setOpenModal(false);
+      //         setModalMessage(null);
+      //       }, 4000);
       return;
     }
 
@@ -198,15 +225,15 @@ export const ArticlePage: React.FunctionComponent = () => {
     const prevActiveUserReaction = activeUserReaction;
 
     let newActiveUserReaction: number | null;
-//     let reactionToApi: number | null;
+    //     let reactionToApi: number | null;
 
     if (clickedReactionTypeId === activeUserReaction) {
       newActiveUserReaction = null;
-//       reactionToApi = clickedReactionTypeId;
+      //       reactionToApi = clickedReactionTypeId;
       updateLocalReactionsCounters(activeUserReaction, null);
     } else {
       newActiveUserReaction = clickedReactionTypeId;
-//       reactionToApi = clickedReactionTypeId;
+      //       reactionToApi = clickedReactionTypeId;
       updateLocalReactionsCounters(activeUserReaction, clickedReactionTypeId);
     }
 
@@ -216,11 +243,10 @@ export const ArticlePage: React.FunctionComponent = () => {
       const response: ArticleReactionResult = await toggleArticleReaction(
         clickedReactionTypeId,
         user.id,
-        article.article_id,
+        article.article_id
       );
 
       console.log("Réponse de la réaction :", response);
-
     } catch (err: any) {
       console.error("Erreur lors de la réaction :", err.message);
       // In case of error, cancel optimistic updates
@@ -230,16 +256,16 @@ export const ArticlePage: React.FunctionComponent = () => {
       setModalMessage("Erreur lors de la réaction.");
       setModalError(true);
       setOpenModal(true);
-//       setTimeout(() => {
-//         setOpenModal(false);
-//         setModalMessage(null);
-//         setModalError(false);
-//       }, 4000);
+      //       setTimeout(() => {
+      //         setOpenModal(false);
+      //         setModalMessage(null);
+      //         setModalError(false);
+      //       }, 4000);
     }
   };
 
-//   console.log("user?.id : ", user?.id);
-//   console.log("initialArticle?.author.user : ", initialArticle?.author.user);
+  //   console.log("user?.id : ", user?.id);
+  //   console.log("initialArticle?.author.user : ", initialArticle?.author.user);
 
   return (
     <DataFetchingState loading={loading} error={error}>
@@ -298,17 +324,29 @@ export const ArticlePage: React.FunctionComponent = () => {
                   <p className="whitespace-pre-wrap">{article.content}</p>
                 )}
               </div>
-              
+
               <div className="flex justify-between items-center mx-8 mb-4">
                 <div className="flex ml-0">
                   {localReactions &&
                     localReactions.map((reaction) => (
                       <div
                         className={`flex flex-col items-center justify-center mr-4 
-                                    ${isAuthor ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
-                                    ${activeUserReaction === reaction.reaction_type_id ? 'text-sky-500' : 'text-sky-950'}`}
+                                    ${
+                                      isAuthor
+                                        ? "cursor-not-allowed opacity-50"
+                                        : "cursor-pointer"
+                                    }
+                                    ${
+                                      activeUserReaction ===
+                                      reaction.reaction_type_id
+                                        ? "text-sky-500"
+                                        : "text-sky-950"
+                                    }`}
                         key={reaction.reaction_type_id}
-                        onClick={() => !isAuthor && handleReactionClick(reaction.reaction_type_id)}
+                        onClick={() =>
+                          !isAuthor &&
+                          handleReactionClick(reaction.reaction_type_id)
+                        }
                       >
                         <div className="mt-3 text-lg transition-transform duration-200 hover:scale-200 origin-center">
                           {reaction.emoji}
@@ -359,7 +397,9 @@ export const ArticlePage: React.FunctionComponent = () => {
                           onClick={() => handleTagClick(tag.tag_id)}
                           role="button"
                           tabIndex={0}
-                          onKeyDown={(e) => e.key === 'Enter' && handleTagClick(tag.tag_id)}
+                          onKeyDown={(e) =>
+                            e.key === "Enter" && handleTagClick(tag.tag_id)
+                          }
                         >
                           {capitalizeFirstLetter(tag.name)}
                         </span>
@@ -395,20 +435,40 @@ export const ArticlePage: React.FunctionComponent = () => {
                 </div>
               )}
             </section>
+
             <section className="card grow m-6 overflow-y-auto flex flex-col md:w-4/5 comments-section">
-              {article.comments && article.comments.length > 0 && (
+              {comments.length > 0 ? (
                 <>
                   <h2 className="mb-4">Commentaires</h2>
-                  {article.comments.map((comment) => (
+                  {comments.map((comment) => (
                     <CommentCard key={comment.comment_id} comment={comment} />
                   ))}
+                  {commentPageCount > 1 && (
+                    <ReactPaginate
+                      breakLabel="..."
+                      nextLabel="next >"
+                      onPageChange={handleCommentPageClick}
+                      pageRangeDisplayed={5}
+                      pageCount={commentPageCount}
+                      previousLabel="< previous"
+                      renderOnZeroPageCount={null}
+                      containerClassName="pagination"
+                      pageClassName="page-item"
+                      pageLinkClassName="page-link"
+                      previousClassName="page-item"
+                      previousLinkClassName="page-link"
+                      nextClassName="page-item"
+                      nextLinkClassName="page-link"
+                      breakClassName="page-item"
+                      breakLinkClassName="page-link"
+                      activeClassName="active"
+                      forcePage={currentCommentPage - 1}
+                    />
+                  )}
                 </>
+              ) : (
+                !loading && <p>Pas encore de commentaires pour cet article.</p>
               )}
-              {!loading &&
-                article.comments &&
-                article.comments.length === 0 && (
-                  <p>Pas encore de commentaires pour cet article.</p>
-                )}
             </section>
           </>
         ) : (

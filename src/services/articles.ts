@@ -11,9 +11,9 @@ export const getArticles = async (page: number = 1): Promise<PaginatedArticles> 
   }
 };
 
-export const getArticleById = async (id: string): Promise<Article> => {
+export const getArticleById = async (id: string, commentPage: number = 1): Promise<Article> => {
   try {
-    const response = await axiosInstance.get<Article>(`/articles/${id}/`);
+    const response = await axiosInstance.get<Article>(`/articles/${id}/?page=${commentPage}`);
     return response.data;
   } catch (error: any) {
     console.error(
