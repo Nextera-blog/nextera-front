@@ -76,3 +76,10 @@ export type Reaction = {
 // export type ArticleWithReactions = Article & {
 //   article_reactions?: Reaction[]; // TO SEE : maybe just adding this line to Article type ?
 // }
+
+export type PaginatedArticles = {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Article[];
+};
