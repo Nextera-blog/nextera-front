@@ -35,6 +35,42 @@
     outline: 2px solid var(--color-sky-200);
   }
 
+  .modify {
+    background-color: var(--color-red-300);
+    font-weight: bold;
+  }
+
+  .modify:hover {
+    background-color: var(--color-red-200);
+    font-weight: bold;
+  }
+
+  .modify:disabled:hover {
+    background-color: var(--color-red-300);
+    font-weight: bold;
+    pointer-events: none;
+  }
+
+  .save {
+    background-color: var(--color-green-300);
+    font-weight: bold;
+  }
+
+  .save:hover {
+    background-color: var(--color-green-200);
+    font-weight: bold;
+  }
+
+  .abort {
+    background-color: var(--color-gray-300);
+    font-weight: bold;
+  }
+
+  .abort:hover {
+    background-color: var(--color-gray-200);
+    font-weight: bold;
+  }
+
   .nav-link {
     font-size: var(--text-lg);
     margin: 0 15px;
@@ -56,6 +92,22 @@
     text-align: center;
     font-weight: bold;
     margin: 16px;
+  }
+
+  /* input-h1-title has the same appearance as the h1, except the background color */
+  .card-title > input.input-h1-title {
+    font-size: var(--text-4xl);
+    text-align: center;
+    font-weight: bold;
+    /* margin: 16px; */
+    color: var(--color-sky-950);
+    background-color: var(--color-sky-200);
+    padding: 0px;
+    /* padding: 5px; */
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   h2 {
@@ -214,4 +266,40 @@ Hexa conversion :
 
 .dark button:focus {
   outline: 2px solid var(--color-sky-200);
+}
+
+.dark .modify {
+  background-color: var(--color-red-500);
+  font-weight: normal;
+}
+
+.dark .modify:hover {
+  background-color: var(--color-red-600);
+  font-weight: bold;
+}
+
+.dark .modify:disabled:hover {
+  background-color: var(--color-red-500);
+  font-weight: normal;
+  pointer-events: none;
+}
+
+.dark .save {
+  background-color: var(--color-green-600);
+  font-weight: normal;
+}
+
+.dark .save:hover {
+  background-color: var(--color-green-700);
+  font-weight: bold;
+}
+
+.dark .abort {
+  background-color: var(--color-gray-500);
+  font-weight: normal;
+}
+
+.dark .abort:hover {
+  background-color: var(--color-gray-600);
+  font-weight: bold;
 }
