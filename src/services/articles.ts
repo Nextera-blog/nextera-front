@@ -1,9 +1,9 @@
 import axiosInstance from "../api/axiosInstance";
-import { Article, Tag } from "../types/api";
+import { Article, PaginatedArticles, Tag } from "../types/api";
 
-export const getArticles = async (): Promise<Article[]> => {
+export const getArticles = async (page: number = 1): Promise<PaginatedArticles> => {
   try {
-    const response = await axiosInstance.get<Article[]>("/articles/");
+    const response = await axiosInstance.get<PaginatedArticles>(`/articles/?page=${page}`);
     return response.data;
   } catch (error: any) {
     console.error("Erreur lors de la récupération des articles : ", error);
@@ -11,9 +11,9 @@ export const getArticles = async (): Promise<Article[]> => {
   }
 };
 
-export const getArticleById = async (id: string): Promise<Article> => {
+export const getArticleById = async (id: string, commentPage: number = 1): Promise<Article> => {
   try {
-    const response = await axiosInstance.get<Article>(`/articles/${id}/`);
+    const response = await axiosInstance.get<Article>(`/articles/${id}/?page=${commentPage}`);
     return response.data;
   } catch (error: any) {
     console.error(

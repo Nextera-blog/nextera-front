@@ -17,7 +17,15 @@ export type Comment = {
   user: Author;
   article: number, // TO SEE : not article_id ?
   parent_comment: number | null;
+  comment_reactions: Reaction[]; // Not implemented
   comment_replies: Comment[];
+}
+
+export interface PaginatedComments {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Comment[];
 }
 
 export type Tag = {
@@ -34,7 +42,9 @@ export type Article = {
   // author_id: number;
   author: Author;
   tags: Tag[];
-  comments: Comment[];
+  // comments: Comment[];
+  comments: PaginatedComments;
+  article_reactions?: Reaction[];
 }
 
 export type ArticleMinimal = {
@@ -64,3 +74,21 @@ export type CurrentUser = {
     role_name: string;
   } | null;
 }
+
+export type Reaction = {
+  reaction_type_id: number;
+  emoji: string;
+  description: string;
+  counter: number;
+}
+
+// export type ArticleWithReactions = Article & {
+//   article_reactions?: Reaction[]; // TO SEE : maybe just adding this line to Article type ?
+// }
+
+export type PaginatedArticles = {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Article[];
+};

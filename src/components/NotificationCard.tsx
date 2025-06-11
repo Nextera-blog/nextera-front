@@ -6,7 +6,7 @@ export type NotificationCardProps = {
 
 export const NotificationCard: React.FunctionComponent<NotificationCardProps> = (props: NotificationCardProps) => {
   const {message, error, openModal} = props;
-  const open = "visible absolute top-4 right-5 min-w-1/5 text-center animate-fade-in-scale";
+  const open = "visible absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 min-w-1/5 max-w-4/5 text-center animate-fade-in-scale z-50";
   const close = "invisible";
 
   return (
