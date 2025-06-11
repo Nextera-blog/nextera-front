@@ -64,7 +64,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.setItem('refresh_token', refreshToken);
     setIsLoggedIn(true);
     setUser(user);
-    // console.log("User in login:", user);
   };
 
   return (

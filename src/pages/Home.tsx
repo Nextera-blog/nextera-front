@@ -1,15 +1,15 @@
 import { ArticleCard } from "../components/ArticleCard";
 // import { Article } from "../types/api";
-import { Article, PaginatedArticles } from "../types/api";
+import { PaginatedArticles } from "../types/api";
 import { getArticles } from "../services/articles";
 import useFetch from "../hooks/useFetch";
 import DataFetchingState from "../components/DataFetchingState";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReactPaginate from "react-paginate";
 
 export const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const { loading, error, data: paginatedData, refetch } = useFetch<PaginatedArticles>(getArticles, currentPage);
+  const { loading, error, data: paginatedData } = useFetch<PaginatedArticles>(getArticles, currentPage);
 
   const articles = paginatedData?.results || [];
   const pageCount = paginatedData ? Math.ceil(paginatedData.count / 10) : 0;
