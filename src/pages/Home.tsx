@@ -51,11 +51,11 @@ export const Home = () => {
             {pageCount > 1 && ( // Shwo pagination only if there is more than 1 page
               <ReactPaginate
                 breakLabel="..."
-                nextLabel="next >"
+                nextLabel="suivant >"
                 onPageChange={handlePageClick}
                 pageRangeDisplayed={5}
                 pageCount={pageCount}
-                previousLabel="< previous"
+                previousLabel="< précédent"
                 renderOnZeroPageCount={null}
                 containerClassName="pagination"
                 pageClassName="page-item"
