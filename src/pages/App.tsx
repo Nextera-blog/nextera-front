@@ -1,30 +1,16 @@
-import React, { useEffect, useState } from "react"
-import { Header } from "../components/Header"
-import { Outlet } from "react-router-dom"
-import { Footer } from "../components/Footer"
-import TempAuth from "../components/TempAuth"
+import React, { useEffect, useState } from "react";
+import { Header } from "../components/Header";
+import { Outlet } from "react-router-dom";
+import { Footer } from "../components/Footer";
 
 export const App: React.FunctionComponent = () => {
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(
+    localStorage.getItem("darkMode") === "true"
+  );
 
   useEffect(() => {
-    const storedDarkMode = localStorage.getItem('darkMode');
-    if (storedDarkMode === 'true') {
-      setDarkMode(true);
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('darkMode', 'true');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('darkMode', 'false');
-    }
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("darkMode", darkMode ? "true" : "false");
   }, [darkMode]);
 
   const toggleDarkMode = () => {
@@ -32,12 +18,10 @@ export const App: React.FunctionComponent = () => {
   };
 
   return (
-    <div className={`w-full min-h-screen flex flex-col ${darkMode ? 'bg-sky-950 text-sky-50' : 'dark:bg-sky-100 dark: text-blue-950'}`}>
+    <div className="w-full min-h-screen flex flex-col bg-white dark:bg-gray-900 text-black dark:text-white">
       <Header onToggleDarkMode={toggleDarkMode} darkMode={darkMode} />
-      {/* TempAuth = component for debugging (temporary file - to delete) */}
-      <TempAuth />
       <Outlet />
       <Footer />
     </div>
-  )
-}
+  );
+};

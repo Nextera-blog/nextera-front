@@ -47,21 +47,24 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         className="px-3 py-1 text-center border border-gray-300 shadow-sm rounded-md w-full "
       />
 
-      <div className="flex flex-wrap w-full justify-between">
-        {availableTags.map((tag) => (
-          <button
-            key={tag.tag_id}
-            type="button"
-            onClick={() => handleTagClick(tag.name)}
-            className={`px-3 py-1 text-sm font-semibold ${
-              selectedTags.includes(tag.name)
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            } focus:outline-none`}
-          >
-            {tag.name}
-          </button>
-        ))}
+      <div className="flex flex-wrap w-full justify-between gap-2">
+        {availableTags.map((tag) => {
+          const isSelected = selectedTags.includes(tag.name);
+          return (
+            <button
+              key={tag.tag_id}
+              type="button"
+              onClick={() => handleTagClick(tag.name)}
+              className={`px-3 py-1 text-sm font-semibold rounded-md focus:outline-none transition-colors duration-200
+                ${isSelected
+                ? 'bg-sky-600 text-white dark:bg-sky-400 dark:border dark:border-white dark:border-3'
+                : 'bg-gray-200 text-gray-700 hover:bg-sky-300 dark:bg-sky-700 dark:text-sky-200 dark:hover:bg-sky-600'
+              }`}
+            >
+              {tag.name}
+            </button>
+          );
+        })}
       </div>
 
       <button

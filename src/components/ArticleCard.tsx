@@ -25,9 +25,6 @@ export const ArticleCard = (props: PostCardType) => {
   const date = new Date(creationDate).toLocaleDateString("fr-FR");
   const url = `/articles/${articleId}`;
 
-  // console.log("author : ", author);
-  // console.log("date", date);
-
   return (
     <article className="card min-h-40">
       <Link to={url}>
