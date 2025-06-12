@@ -85,7 +85,7 @@ export const getAllTags = async (): Promise<Tag[]> => {
 
 export const createComment = async (comment: NewComment) : Promise<NewComment> => {
   try {
-    const response = await axiosInstance.post<NewComment>('/comments/create/', {comment});
+    const response = await axiosInstance.post<NewComment>('/comments/create/', comment);
     return response.data;
   } catch (error) {
     console.error("Erreur lors de la création du commentaire : ", error);

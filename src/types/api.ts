@@ -22,10 +22,10 @@ export type Comment = {
 }
 
 export type NewComment = {
-  article: number;
-  parent_comment: number | null;
   content: string;
   user: number;
+  article: number;
+  parent_comment: number | null;
 }
 
 export interface PaginatedComments {

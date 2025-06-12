@@ -25,9 +25,6 @@ export const ArticleCard = (props: PostCardType) => {
   const date = new Date(creationDate).toLocaleDateString("fr-FR");
   const url = `/articles/${articleId}`;
 
-  // console.log("author : ", author);
-  // console.log("date", date);
-
   return (
     <article className="card min-h-40">
       <Link to={url}>
@@ -70,7 +67,6 @@ export const ArticleCard = (props: PostCardType) => {
 
       {tags && tags.length > 0 && (
         <div>
-          {/* <h2>Tags :</h2> */}
           <div>
             {tags.map((tag) => (
               <span key={tag.tag_id} className="tag">

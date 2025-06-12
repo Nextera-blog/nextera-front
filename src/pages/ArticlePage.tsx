@@ -437,7 +437,9 @@ export const ArticlePage: React.FunctionComponent = () => {
               )}
             </section>
 
-            <NewCommentCard articleId={article.article_id} />
+            <div className="md:w-4/5">
+              <NewCommentCard articleId={article.article_id} parentCommentId={null} />
+            </div>
 
             <section className="card grow m-6 overflow-y-auto flex flex-col md:w-4/5 comments-section">
               {comments.length > 0 ? (
