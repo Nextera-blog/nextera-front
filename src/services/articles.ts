@@ -1,9 +1,24 @@
 import axiosInstance from "../api/axiosInstance";
 import { Article, NewComment, PaginatedArticles, Tag } from "../types/api";
 
-export const getArticles = async (page: number = 1): Promise<PaginatedArticles> => {
+export const getArticles = async (
+  page: number = 1,
+  searchQuery: string = "",
+  tags: string[] = []
+): Promise<PaginatedArticles> => {
   try {
-    const response = await axiosInstance.get<PaginatedArticles>(`/articles/?page=${page}`);
+    let url = `/articles/?page=${page}`;
+
+    if (searchQuery) {
+      url += `&search=${encodeURIComponent(searchQuery)}`;
+    }
+
+    if (tags.length > 0) {
+      const formattedTags = `{${tags.map(tag => tag.trim()).join(',')}}`;
+      url += `&tags=${encodeURIComponent(formattedTags)}`;
+    }
+
+    const response = await axiosInstance.get<PaginatedArticles>(url);
     return response.data;
   } catch (error: any) {
     console.error("Erreur lors de la récupération des articles : ", error);

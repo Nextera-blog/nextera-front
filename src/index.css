@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 * {
   box-sizing: border-box;
   font-family: monospace;
@@ -100,11 +102,9 @@
     font-size: var(--text-4xl);
     text-align: center;
     font-weight: bold;
-    /* margin: 16px; */
     color: var(--color-sky-950);
     background-color: var(--color-sky-200);
     padding: 0px;
-    /* padding: 5px; */
     border-radius: 5px;
     border: none;
     width: 100%;
@@ -162,7 +162,6 @@
   .card:hover {
     outline-width: 2px;
     outline-color: var(--color-sky-500);
-    /* cursor: pointer; */
   }
 
   .tag {
@@ -373,4 +372,14 @@ Hexa conversion :
 .dark .abort:hover {
   background-color: var(--color-gray-600);
   font-weight: bold;
+}
+
+.dark .tag-selected {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.dark .tag-unselected {
+  background-color: #374151;
+  color: #d1d5db;
 }

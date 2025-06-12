@@ -4,15 +4,15 @@ import { UnauthorizedPage } from "../pages/UnauthorizedPage";
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
-    allowedRoles: string[]; // TO SEE WITH Alex : role Author ? + role Admin ? + superUser ?
+    allowedRoles: string[];
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
     const { isLoggedIn, user, isLoadingAuth } = useAuth();
 
-    console.log("isLoggedIn : ", isLoggedIn);
-    console.log("user : ", user);
-    console.log("isLoadingAuth : ", isLoadingAuth);
+    // console.log("isLoggedIn : ", isLoggedIn);
+    // console.log("user : ", user);
+    // console.log("isLoadingAuth : ", isLoadingAuth);
 
     if (isLoadingAuth) {
       return (
