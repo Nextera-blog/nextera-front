@@ -32,18 +32,6 @@ export const RedactionArticlePage: React.FunctionComponent = () => {
     const title = formData.get("title") as string;
     const content = formData.get("content") as string;
 
-    // createArticle(title, content, setMessage, setError);
-
-    // setOpenModal(true);
-    // setTimeout(() => 
-    //   {
-    //     setOpenModal(false);
-    //     if (!error) {
-    //       navigate('/');
-    //     }
-    //   }, 3000
-    // );
-
     try {
       if (userId) {
         await createArticle(title, content, userId);

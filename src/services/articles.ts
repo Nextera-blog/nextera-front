@@ -1,5 +1,5 @@
 import axiosInstance from "../api/axiosInstance";
-import { Article, PaginatedArticles, Tag } from "../types/api";
+import { Article, NewComment, PaginatedArticles, Tag } from "../types/api";
 
 export const getArticles = async (
   page: number = 1,
@@ -97,3 +97,13 @@ export const getAllTags = async (): Promise<Tag[]> => {
     throw error;
   }
 };
+
+export const createComment = async (comment: NewComment) : Promise<NewComment> => {
+  try {
+    const response = await axiosInstance.post<NewComment>('/comments/create/', comment);
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la création du commentaire : ", error);
+    throw error;
+  }
+}

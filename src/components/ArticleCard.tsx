@@ -67,7 +67,6 @@ export const ArticleCard = (props: PostCardType) => {
 
       {tags && tags.length > 0 && (
         <div>
-          {/* <h2>Tags :</h2> */}
           <div>
             {tags.map((tag) => (
               <span key={tag.tag_id} className="tag">

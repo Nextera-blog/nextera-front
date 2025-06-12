@@ -18,7 +18,6 @@ export const Home = () => {
     loading,
     error,
     data: paginatedData,
-    refetch,
   } = useFetch<PaginatedArticles>(
     getArticles,
     currentPage,

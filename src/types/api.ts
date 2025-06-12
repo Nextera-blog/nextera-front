@@ -21,6 +21,13 @@ export type Comment = {
   comment_replies: Comment[];
 }
 
+export type NewComment = {
+  content: string;
+  user: number;
+  article: number;
+  parent_comment: number | null;
+}
+
 export interface PaginatedComments {
   count: number;
   next: string | null;

@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { NotificationCard } from "../components/NotificationCard";
 import { ArticleReactionResult, toggleArticleReaction } from "../services/reactions";
 import ReactPaginate from "react-paginate";
+import { NewCommentCard } from "../components/NewCommentCard";
 
 export const ArticlePage: React.FunctionComponent = () => {
   const { id } = useParams();
@@ -435,6 +436,10 @@ export const ArticlePage: React.FunctionComponent = () => {
                 </div>
               )}
             </section>
+
+            <div className="md:w-4/5">
+              <NewCommentCard articleId={article.article_id} parentCommentId={null} />
+            </div>
 
             <section className="card grow m-6 overflow-y-auto flex flex-col md:w-4/5 comments-section">
               {comments.length > 0 ? (
