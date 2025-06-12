@@ -13,10 +13,6 @@ export const Header: React.FC<HeaderProps> = ({
   const navigate = useNavigate();
   const { isLoggedIn, logout, user } = useAuth();
 
-  // console.log("isLoggedIn : ", isLoggedIn);
-  // console.log("user : ", user);
-  // console.log("user.role.role : ", user?.role?.role_name);
-
   const isAuthorisedToCreateArticle =
     user?.author?.user === user?.id && user?.role?.role_name === "Author";
 
