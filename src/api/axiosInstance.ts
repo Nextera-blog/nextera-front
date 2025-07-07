@@ -1,6 +1,12 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 
-const baseURL = 'http://localhost:8000';
+// const baseURL = 'http://localhost:8000';
+
+// Utiliser la variable d'environnement injectée par Vite.
+// `import.meta.env.VITE_API_URL` est la façon dont Vite expose les variables d'env
+// préfixées par VITE_. Le || 'http://localhost:8000' est un fallback utile
+// si la variable n'est pas définie (ex: en dehors d'un environnement Vite ou Docker).
+const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: baseURL,
