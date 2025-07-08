@@ -30,7 +30,7 @@ export const NewCommentCard:React.FunctionComponent<NewCommentProps> = ({article
 
     if (comment && comment !== null) {
       createComment(comment);
-      window.location.reload(); // not the best but refresh content
+      window.location.reload();
     }
 
   }
