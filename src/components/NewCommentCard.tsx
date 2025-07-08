@@ -2,7 +2,7 @@ import React from "react";
 import { createComment } from "../services/articles";
 import { useAuth } from "../contexts/AuthContext";
 import { NewComment } from "../types/api";
-import { useNavigate, useParams } from "react-router-dom";
+// import { useNavigate, useParams } from "react-router-dom";
 
 export type NewCommentProps = {
   articleId: number;
@@ -12,8 +12,8 @@ export type NewCommentProps = {
 export const NewCommentCard:React.FunctionComponent<NewCommentProps> = ({articleId, parentCommentId}) => {  
   const { user } = useAuth();
   const userId = user?.id;
-  const navigate = useNavigate();
-  const url = useParams();
+  // const navigate = useNavigate();
+  // const url = useParams();
 
   const handleSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

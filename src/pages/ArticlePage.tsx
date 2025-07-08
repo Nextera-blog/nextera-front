@@ -92,9 +92,16 @@ export const ArticlePage: React.FunctionComponent = () => {
     setCurrentCommentPage(event.selected + 1); // react-paginate uses a base index of 0, the API a base index of 1
   };
 
+  // const handleEditClick = () => {
+  //   // functional form of the state update, becuse otherwise, changes are sometimes not saved
+  //   setIsEditing((prevState) => {
+  //     return true;
+  //   });
+  // };
+
   const handleEditClick = () => {
     // functional form of the state update, becuse otherwise, changes are sometimes not saved
-    setIsEditing((prevState) => {
+    setIsEditing(() => {
       return true;
     });
   };
